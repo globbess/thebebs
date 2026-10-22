@@ -115,7 +115,7 @@
 
   const game = {
     id: 'kick', name: 'Sunday Football', kicker: 'Game 1',
-    blurb: 'Penalties past Lonis, until he saves one.',
+    blurb: 'How many can you get past Lonis?',
     how: 'Swipe up from the ball to shoot: sideways for the corners, a longer swipe goes higher. Or tap the spot in the goal you want. Keep scoring until Lonis saves one. He gets quicker with every goal.',
     better: 'high', scene: 0.68, disco: false,           // golden hour over Rösås, the sun up
     fmt: goalsText,
@@ -123,8 +123,9 @@
     thumb(g, w, h, t) {
       const G = geo(w, h);
       field(g, w, h, t, G); goalNet(g, G, t); goalFrame(g, G);
-      Bebs.lonis(g, G.bx + 4, G.gl, G.u * 1.3, { pose: 'out', rot: -0.5, t: 1, face: 'grin' });
-      ball(g, G.bx - G.gw * 0.3, G.gl - G.gh * 0.6, 2, 0);
+      Bebs.lonis(g, G.bx + G.gw * 0.12, G.gl, G.u * 1.3, { pose: 'out', t: 1, face: 'grin' });            // in goal, waiting
+      Bebs.andrea(g, G.bx - G.gw * 0.32, h - 1, G.u * 2.4, { pose: 'stand', t: 1 });                       // about to shoot
+      ball(g, G.bx - G.gw * 0.22, G.gl - G.gh * 0.55, 3, 0);
     },
 
     setup(api) { S = fresh(); kicksHud(api); },

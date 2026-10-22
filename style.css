@@ -988,12 +988,20 @@ body.disco .dance{ opacity: 1; transform: none; }
 .headcount{ display: flex; align-items: center; gap: 10px; margin: -4px 0 22px; }
 /* the note under the RSVP button: smaller, a little aside */
 .sec .gifts{
-  margin: -16px 0 0 -14px; padding: 11px 14px 12px; max-width: 48ch;
+  position: relative; isolation: isolate;
+  margin: -34px -40px -18px -40px; padding: 30px 40px 32px; max-width: calc(48ch + 80px);
   font-size: clamp(15px, 1.3vw, 18px); line-height: 1.6; color: var(--ink);
-  /* a soft frosted backing (white in light mode, night in dark), so it reads over the dots */
-  background: rgba(var(--shade-rgb),.62); border-radius: 16px;
-  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
-  text-shadow: none;
+  text-shadow: 0 0 6px rgba(var(--shade-rgb),.9);
+}
+/* behind the words, a soft rectangle of light (white in light mode, night in dark): solid in the
+   middle, its edges feathered away to nothing */
+.sec .gifts::before{
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: rgba(var(--shade-rgb),.86);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 34px, #000 calc(100% - 34px), transparent), linear-gradient(to bottom, transparent, #000 26px, #000 calc(100% - 26px), transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent, #000 34px, #000 calc(100% - 34px), transparent), linear-gradient(to bottom, transparent, #000 26px, #000 calc(100% - 26px), transparent);
+  mask-composite: intersect;
 }
 .headcount[hidden]{ display: none; }
 .hc-dot{

@@ -194,7 +194,7 @@
   }
 
   const game = {
-    id: 'dress', name: 'Dress Up the Bebs', kicker: 'Game 2', panel: true, panelSide: true,
+    id: 'dress', name: 'Dress Up the Bebs', thumbScene: () => (D.light ? 0.985 : 0.93), kicker: 'Game 2', panel: true, panelSide: true,
     blurb: 'A whole closet, from the wedding dress to his black Crocs.',
     get cell() { return 2.4; },                                  // fine dots: details like makeup show
     // the night, with the mirror ball up where the moon is; in dark mode the last of the dusk

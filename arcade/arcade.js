@@ -210,11 +210,26 @@
     });
     drawThumbs();
   }
+  // behind each card's picture: the site's landscape at that game's time of day (in the game itself the
+  // real one is behind, so the pictures need their own): sky, the mountains with their golden edge, the lake
+  function thumbBackdrop(g, w, h, def) {
+    const p = typeof def.thumbScene === 'function' ? def.thumbScene() : def.thumbScene != null ? def.thumbScene : def.scene != null ? def.scene : 0.7;
+    const hz = Math.round(h * 0.58), s = D.paintSky(g, w, 0, hz, p);
+    if (p > 0.86 || p < 0.1) D.stars(g, w, hz * 0.8, 1200, 0.9, 5);
+    const far = D.mix(D.light ? [118, 84, 168] : [66, 40, 118], s.bot, 0.12), near = D.mix(D.light ? [52, 120, 128] : [22, 80, 96], s.bot, 0.08);
+    const ridgeLine = (amp, k, off, col) => { g.fillStyle = D.rgb(col); for (let x = 0; x < w; x++) g.fillRect(x, Math.round(hz - amp * D.ridgeH(x + off, k)), 1, 1); };
+    D.ridge(g, w, hz, h * 0.26, 1.3, 7, far, 1);
+    ridgeLine(h * 0.26, 1.3, 7, [255, 196, 80]);
+    D.ridge(g, w, hz, h * 0.12, 2.7, 31, near, 1);
+    ridgeLine(h * 0.12, 2.7, 31, [140, 230, 120]);
+    D.water(g, w, hz, h, D.mix(s.bot, [44, 30, 90], 0.35), D.mix(s.top, [12, 6, 32], 0.45), 1200, [255, 236, 214]);
+  }
   function drawThumbs() {
     thumbs.forEach(th => {
       const w = th.cv.clientWidth || 160;
-      th.st.fit(w, Math.round(w * 0.75), Math.max(3, w / 44));
+      th.st.fit(w, Math.round(w * 0.75), Math.max(2.4, w / 62));   // fine dots, so the little scene reads
       th.st.clear();
+      if (th.def.thumbBackdrop !== false) thumbBackdrop(th.st.g, th.st.w, th.st.h, th.def);
       th.def.thumb(th.st.g, th.st.w, th.st.h, 1200);
       th.st.render();
       th.be.textContent = bestText(th.def);

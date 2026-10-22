@@ -4,7 +4,7 @@
    Games call Bebs.andrea(g, x, y, u, o) and Bebs.lonis(g, x, y, u, o) with their feet at (x, y)
    in scene pixels; u is the size (Andrea stands 24u tall, Lonis 28u). Nothing is drawn into the
    scene: each call is noted, and the stage paints the dolls on top after its dots (Bebs.paint).
-   o = { pose, phase, t, rot, pivot, flip, alpha }
+   o = { pose, phase, t, rot, pivot, flip, alpha, cut }
      pose: 'run' bobs along, 'jump' leans into it, 'up' hops, 'twirl' spins, 'serve' leans back;
      anything else stands. rot turns them (radians) around a point pivot·u above the feet. */
 
@@ -129,7 +129,10 @@
       if (o.rot) { const pv = (o.pivot || 0) * u * sy; ctx.translate(0, pv); ctx.rotate(o.rot); ctx.translate(0, -pv); }
       if (tilt) ctx.rotate(tilt * (o.flip ? -1 : 1));
       ctx.scale(flipX, 1);
-      ctx.drawImage(s.cv, -s.w / 2 - s.pad, -s.h - s.pad);
+      if (o.cut) {                                          // o.cut: hide that much of them from the feet up (sitting in a car)
+        const vis = Math.max(1, Math.round(s.pad + s.h * (1 - o.cut)));
+        ctx.drawImage(s.cv, 0, 0, s.cv.width, vis, -s.w / 2 - s.pad, -s.h - s.pad, s.cv.width, vis);
+      } else ctx.drawImage(s.cv, -s.w / 2 - s.pad, -s.h - s.pad);
       ctx.restore();
     });
   }

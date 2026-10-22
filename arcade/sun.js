@@ -91,7 +91,7 @@
     id: 'sun', name: 'Keep the Sun Up', kicker: 'Game 5',
     blurb: 'The Swedish sun barely sets. Keep it up until sunrise.',
     how: 'Tap to lift the sun. Steer it through the birches and clouds and keep it out of the lake. Every gap is ten more minutes of light. Sunrise is at 03:30.',
-    better: 'high', noSun: true, disco: false,
+    better: 'high', noSun: true, disco: false, thumbScene: 0.8,
     sceneAt: () => sceneAt(S ? S.m : 0),
     fmt: m => clock(m),
 
