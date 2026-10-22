@@ -354,9 +354,9 @@
       S.t += dt;
       const lv = Math.min(2, Math.floor(S.t / LEVEL_T));
       if (lv !== S.lv) {
-        S.lv = lv; S.fade = 1; api.toast('Next stop: ' + LEVELS[lv].name, w * 0.5, h * 0.3, 'big warm'); stripAll(api);
+        S.lv = lv; S.fade = 1; api.toast('Welcome to ' + LEVELS[lv].name, w * 0.5, h * 0.3, 'big warm', 2800); stripAll(api);
         const ride = ['', 'Matte black Tesla Roadster unlocked', 'Voi scooter unlocked'][lv];   // the surprise
-        if (ride) setTimeout(() => { if (S && S.lv === lv && api.running) api.toast('🔓 ' + ride, w * 0.5, h * 0.42, 'big unlock'); }, 1100);
+        if (ride) setTimeout(() => { if (S && S.lv === lv && api.running) api.toast('🔓 ' + ride, w * 0.5, h * 0.42, 'big unlock', 3600); }, 1100);
       }
       S.fade = Math.max(0, S.fade - dt * 0.8);
       const speed = (S.done ? 0 : LEVELS[S.lv].speed + (S.t % LEVEL_T) * 0.25) * Math.max(1, w / 72);
@@ -380,8 +380,8 @@
           S.next = 52 + Math.random() * 46 + speed * 0.4 + spr.rows[0].length * SC + (k === 'robotaxi' ? 22 : 0);
         }
       } else if (!S.arrive) {                                          // a little stretch of countryside first
-        S.arrive = { x: w + 30 + w * 3 }; api.toast('Next stop: Rösås', w * 0.5, h * 0.3, 'big warm');
-        setTimeout(() => { if (S && S.arrive && !S.done && api.running) api.toast('🔓 Farm tractor unlocked', w * 0.5, h * 0.42, 'big unlock'); }, 1100);
+        S.arrive = { x: w + 30 + w * 3 }; api.toast('Welcome to Rösås', w * 0.5, h * 0.3, 'big warm', 2800);
+        setTimeout(() => { if (S && S.arrive && !S.done && api.running) api.toast('🔓 Farm tractor unlocked', w * 0.5, h * 0.42, 'big unlock', 3600); }, 1100);
       }
 
       const px = Math.round(w * 0.24), feet = gy + S.y;
@@ -414,7 +414,7 @@
           api.toast('Rösås!', w * 0.5, h * 0.3, 'big');
           api.buzz(30);
           const total = S.hearts + 25;
-          api.end({ title: 'Welcome to Rösås', text: 'June 12, 2027. You made it all the way from Roatán, with ' + S.hearts + ' hearts and a bonus for arriving.', score: total, scoreText: total + ' hearts', counts: !S.skip, delay: 2200 });
+          api.end({ title: 'You made it!', text: 'June 12, 2027. You made it all the way from Roatán, with ' + S.hearts + ' hearts and a bonus for arriving.', score: total, scoreText: total + ' hearts', counts: !S.skip, delay: 2200 });
         }
       }
     },

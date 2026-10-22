@@ -247,14 +247,16 @@
       running: false, paused: false, time: 0,
       get hz() { return Math.round(st.h * 0.58); },          // the lake line of the landscape behind
       hud(html) { hudEl.innerHTML = html; },
-      toast(text, x, y, cls) {
+      // ms: how long it stays (1.6 s unless said otherwise)
+      toast(text, x, y, cls, ms) {
         const n = document.createElement('div');
         n.className = 'toast' + (cls ? ' ' + cls : '');
         n.textContent = text;
         n.style.left = D.clamp(x / st.w, 0.12, 0.88) * 100 + '%';
         n.style.top = D.clamp(y / st.h, 0.12, 0.92) * 100 + '%';
+        if (ms) n.style.animationDuration = ms / 1000 + 's';
         stageEl.appendChild(n);
-        setTimeout(() => n.remove(), 1700);
+        setTimeout(() => n.remove(), (ms || 1600) + 100);
       },
       buzz(ms) { try { if (navigator.vibrate) navigator.vibrate(ms || 12); } catch (e) {} },
       best: () => getBest(def.id),
