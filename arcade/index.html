@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Bebs Arcade · Lonis &amp; Andrea</title>
+<meta name="description" content="Penalties past Lonis, a whole closet to dress up, chess, and more. Little games for the wedding.">
+<!-- the preview when the link is shared: the two of us on the dance floor, under the mirror ball -->
+<meta property="og:title" content="The Bebs Arcade">
+<meta property="og:description" content="Little games for Lonis &amp; Andrea's wedding. Get on the high scores.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://thebebs.com/arcade/">
+<meta property="og:image" content="https://thebebs.com/arcade/share.jpg?v=1">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Lonis and Andrea, in dots, on a black-and-white dance floor by the lake under a mirror ball, with the words The Bebs Arcade">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Questrial&display=swap">
+<link rel="stylesheet" href="arcade.css?v=12">
+<script>
+  /* light or dark: the guest's choice on thebebs.com if they've made one, otherwise their phone's */
+  (function () {
+    var r = document.documentElement, t = null;
+    try { t = localStorage.getItem('la-theme'); } catch (e) {}
+    if (!t) t = window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    r.classList.add(t);
+  })();
+  /* the site's landscape behind the arcade (art.js, in its arcade mode); arcade.js moves it */
+  window.ART_EMBED = { scene: 0.7, night: false, disco: true, taps: true };
+</script>
+</head>
+<body>
+<canvas id="art" aria-hidden="true"></canvas>
+
+<div class="topbar">
+  <a class="chip" href="/" id="home-link">
+    <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    thebebs.com
+  </a>
+  <button class="chip round theme-btn" id="theme-btn" type="button" aria-label="Switch light or dark">
+    <svg class="i-sun" viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><circle cx="8" cy="8" r="3.2" fill="currentColor"/><path d="M8 .9v2.2M8 12.9v2.2M.9 8h2.2M12.9 8h2.2M3 3l1.5 1.5M11.5 11.5L13 13M13 3l-1.5 1.5M4.5 11.5L3 13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    <svg class="i-moon" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M13.6 10.4A6 6 0 0 1 5.6 2.4a6 6 0 1 0 8 8z" fill="currentColor"/></svg>
+  </button>
+</div>
+
+<main class="menu" id="menu">
+  <section class="hero" aria-label="Arcade">
+    <canvas id="hero-art" aria-hidden="true"></canvas>
+    <div class="hero-text">
+      <h1>The Bebs Arcade</h1>
+    </div>
+  </section>
+
+  <ul class="games" id="games"></ul>
+  <p class="foot">June 12, 2027 · Rösås, Bäckaby</p>
+</main>
+
+<section class="play" id="play" hidden aria-labelledby="play-title">
+  <div class="stage" id="stage">
+    <canvas id="stage-cv"></canvas>
+  </div>
+  <div class="play-bar">
+    <button class="chip" id="play-back" type="button">
+      <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Arcade
+    </button>
+    <h2 class="play-title" id="play-title"></h2>
+    <div class="hud" id="hud" aria-live="polite"></div>
+  </div>
+  <div class="strip" id="strip"></div>
+  <div class="panel" id="panel"></div>
+</section>
+
+<script src="../art.js?v=117"></script>
+<script>window.TRACK_OPEN = 'Opened: Arcade';</script>
+<script src="../track.js?v=4"></script>
+<script src="hiscores.js?v=2"></script>
+<script src="dots.js?v=1"></script>
+<script src="bebs.js?v=8"></script>
+<script src="arcade.js?v=16"></script>
+<script src="list.js?v=4"></script>
+<script src="run.js?v=3"></script>
+<script src="kick.js?v=5"></script>
+<script src="sun.js?v=3"></script>
+<script src="chess-engine.js?v=1"></script>
+<script src="wardrobe.js?v=13"></script>
+<script src="closet.js?v=5"></script>
+<script src="dress.js?v=20"></script>
+<script src="chess.js?v=7"></script>
+<script>Arcade.boot();</script>
+</body>
+</html>

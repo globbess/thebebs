@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">   <!-- unlisted: only people with the link find it -->
+<title>Lonis &amp; Andrea — June 12, 2027</title>
+<meta name="description" content="Lonis and Andrea are getting married on June 12, 2027 at Rösås, Bäckaby, Sweden.">
+<meta property="og:title" content="Lonis &amp; Andrea — June 12, 2027">
+<meta property="og:description" content="Rösås, Bäckaby. Come and celebrate with us.">
+<!-- the picture shown when the link is shared (WhatsApp, iMessage, Instagram…) -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://thebebs.com/">
+<meta property="og:image" content="https://thebebs.com/og.jpg?v=2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Lonis and Andrea by the water, beside their names in a frame of roses, anthuriums, lilies, orchids and hanging amaranthus. June 12, 2027, Rösås, Bäckaby, Sweden">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230d0620'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%238fd62f'/%3E%3C/svg%3E">
+<script>
+  /* light or dark: the guest's own choice if they've made one, otherwise their phone's setting (theme.js has the switch) */
+  (function () {
+    var t = null;
+    try { t = localStorage.getItem('la-theme'); } catch (e) {}
+    if (!t) t = window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    if (t === 'light') document.documentElement.classList.add('light');
+  })();
+</script>
+<link rel="stylesheet" href="style.css?v=152">
+</head>
+<body>
+
+<canvas id="art" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<!-- top left: the language switch (i18n.js), and light or dark beside it (theme.js) -->
+<div class="corner">
+  <nav class="lang" aria-label="Language">
+    <button type="button" data-lang="en" lang="en" aria-label="English">EN</button>
+    <button type="button" data-lang="sv" lang="sv" aria-label="Svenska">SV</button>
+    <button type="button" data-lang="es" lang="es" aria-label="Español">ES</button>
+  </nav>
+  <!-- light or dark (theme.js): shows a moon in light mode and a sun in dark mode -->
+  <button class="theme-btn" id="theme-btn" type="button" aria-label="Switch to light mode">
+    <svg class="i-sun" viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><circle cx="8" cy="8" r="3.2" fill="currentColor"/><path d="M8 .9v2.2M8 12.9v2.2M.9 8h2.2M12.9 8h2.2M3 3l1.5 1.5M11.5 11.5L13 13M13 3l-1.5 1.5M4.5 11.5L3 13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    <svg class="i-moon" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M13.6 10.4A6 6 0 0 1 5.6 2.4a6 6 0 1 0 8 8z" fill="currentColor"/></svg>
+  </button>
+</div>
+
+<!-- Music: a play/pause button and a small list of songs to choose from. Plays through the
+     official SoundCloud and Spotify players, which load only when someone reaches for the buttons. -->
+<div class="music" id="music">
+  <span class="music-tip" id="music-tip" role="status" aria-live="polite"></span>
+  <button class="music-list" id="music-list" type="button" aria-label="Choose a song" data-i18n-attr="aria-label:music.choose"
+          aria-haspopup="true" aria-expanded="false" aria-controls="music-menu">
+    <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M2 4h8v1.6H2zM2 7.2h8v1.6H2zM2 10.4h5v1.6H2zM12.5 3v6.6a1.9 1.9 0 1 1-1.3-1.8V3z" fill="currentColor"/></svg>
+  </button>
+  <button class="music-play" id="music-play" type="button" aria-pressed="false">
+    <svg class="i-play"  viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M4.5 2.8l9 5.2-9 5.2z" fill="currentColor"/></svg>
+    <svg class="i-pause" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor"/></svg>
+  </button>
+  <ul class="music-menu" id="music-menu" aria-label="Songs" data-i18n-attr="aria-label:music.songs" hidden></ul>
+</div>
+
+<!-- under the play button: the gallery (gallery.js; hidden for now, Andy 2026-10-21; the gallery is still
+     reached by thebebs.com/gallery and the 📸 count), and the arcade (it lights up once all 15 photos are found) -->
+<div class="side-stack">
+  <button class="side-btn photos-btn" id="photos-btn" type="button" hidden aria-label="Gallery" data-i18n-attr="aria-label:gallery.title">
+    <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><path d="M3 6.5h3l1.4-2h5.2l1.4 2h3v9.5H3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="10" cy="11" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+  </button>
+  <a class="side-btn arcade-btn" id="arcade-btn" href="arcade/" aria-label="The Bebs Arcade" data-i18n-attr="aria-label:arcade.label">
+    <svg viewBox="0 0 20 20" width="19" height="19" aria-hidden="true"><path d="M5.6 6.5h8.8a3.6 3.6 0 0 1 3.5 4.4l-.8 3.3a2 2 0 0 1-3.5.7L12.2 13H7.8l-1.4 1.9a2 2 0 0 1-3.5-.7l-.8-3.3a3.6 3.6 0 0 1 3.5-4.4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M6.6 8.6v3M5.1 10.1h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12.9" cy="9.6" r=".95" fill="currentColor"/><circle cx="14.7" cy="11.4" r=".95" fill="currentColor"/></svg>
+  </a>
+</div>
+
+<div class="music-card" id="music-card">
+  <div class="music-card-bar">
+    <span class="music-card-hint" id="music-card-hint">Tap &#9654; to start</span>
+    <button class="music-card-close" id="music-card-close" type="button" aria-label="Hide player" data-i18n-attr="aria-label:music.hide">&times;</button>
+  </div>
+  <div class="player-slot player-spotify"><div id="spotify"></div></div>
+  <div class="player-slot player-soundcloud" id="soundcloud"></div>
+</div>
+
+<main>
+
+  <section class="sec hero">
+    <div class="inner">
+      <p class="kicker" data-i18n="hero.kicker">Let's celebrate love</p>
+      <h1><span class="n">Lonis</span> <span class="amp">&amp;</span> <span class="n">Andrea</span></h1>
+      <p class="hero-date"><time datetime="2027-06-12" data-i18n="hero.date">June 12, 2027</time></p>
+      <p class="hero-place" data-i18n="hero.place">Rösås, Bäckaby, Sweden</p>
+      <p class="countdown" id="countdown" aria-live="off"></p>
+      <button class="rsvp-open" type="button" aria-haspopup="dialog" aria-controls="rsvp" data-i18n="rsvp.button">RSVP</button>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="inner">
+      <!-- The full story by default; the button beside the heading trims it down one step at a time, then back to the full story -->
+      <div class="head-row">
+        <h2 data-i18n="story.title">The story of us</h2>
+        <span class="nudge-wrap">
+          <button class="story-next" id="story-next" type="button" aria-controls="story">TL;DR</button>
+          <!-- a hand-drawn arrow and note pointing at the button, until it's been tapped (story.js) -->
+          <span class="nudge" aria-hidden="true">
+            <span class="nudge-text"><span class="nudge-click" data-i18n="story.nudgeClick">click me</span><span class="nudge-tap" data-i18n="story.nudgeTap">tap me</span></span>
+            <svg viewBox="0 0 64 44" width="64" height="44"><path class="nudge-line" d="M58 6 C 44 2, 26 8, 16 30"/><path class="nudge-head" d="M9 22 L 16 31 L 25 25"/></svg>
+          </span>
+        </span>
+      </div>
+      <div class="story" id="story" aria-live="polite">
+        <div class="story-v" data-v="0">
+          <!-- a card with two sides (flip.js): the full story on the front; turn it over for two of their adventures -->
+          <div class="face face-front">
+            <p data-i18n-html="story.long.1">How does a tech nerd from Sweden meet a baddie from Honduras? On Roatán, a tiny island in the Caribbean, of course, where the two of them were building a brand-new free city from scratch.</p>
+            <p data-i18n-html="story.long.2">Andrea had been praying for her person every single day, with a list so long and so specific that she sometimes wondered if she was being a little delusional. Lonis, meanwhile, had just moved to an island full of libertarians, not exactly famous for its dating scene, and had quietly made peace with his bloodline ending right there. Then they met. She’d been hustling God every day, and he just got lucky. For the record, she wasn’t delusional at all: every box was checked, curly hair included.</p>
+            <p data-i18n-html="story.long.3">They went from building a free city to building a life and a family. They’ve chased adventures all over the world since, but the best one is still the everyday one, together. Today they live in San Francisco, where Lonis runs an AI investment fund and is having so much fun doing it. Both of them have always been deeply AI and tech-pilled, so the city fits them well, for now. Ask them about it at the wedding. Or don’t, if you want to make it to the dance floor.</p>
+            <p data-i18n-html="story.long.4">They can’t wait to celebrate with you!</p>
+            <div class="peek" aria-hidden="true"></div>
+          </div>
+          <div class="face face-back" hidden>
+            <div class="polaroids">
+              <figure data-scene="0.3" class="polaroid polaroid-land"><img data-photo="prague" alt="Lonis and Andrea by the river in Prague" data-i18n-attr="alt:story.pragueAlt"><figcaption data-i18n="story.tagPrague">Prague</figcaption></figure>
+              <figure data-scene="0.5" class="polaroid polaroid-land"><img data-photo="atitlan" alt="Lonis and Andrea hugging above Lake Atitlán" data-i18n-attr="alt:story.atitlanAlt"><figcaption data-i18n="story.tagAtitlan">Lake Atitlán</figcaption></figure>
+              <figure data-scene="0.7" class="polaroid polaroid-land"><img data-photo="telaviv" alt="Lonis and Andrea in Tel Aviv at golden hour" data-i18n-attr="alt:story.telavivAlt"><figcaption data-i18n="story.tagTelaviv">Tel Aviv</figcaption></figure>
+              <figure data-scene="0.86" class="polaroid polaroid-land"><img data-photo="tallinn" alt="Lonis and Andrea in front of a cathedral in Tallinn" data-i18n-attr="alt:story.tallinnAlt"><figcaption data-i18n="story.tagTallinn">Tallinn</figcaption></figure>
+            </div>
+            <p class="face-line" data-i18n="story.adventures">Adventures all around. The best one is still the everyday one, together.</p>
+          </div>
+          <button class="turn" type="button" aria-pressed="false">
+            <span class="turn-hint" aria-hidden="true"><span data-i18n="story.turnHint">psst, turn the page</span><svg viewBox="0 0 64 44" width="64" height="44"><path class="th-line" d="M6 38 C 20 42, 38 36, 48 14"/><path class="th-head" d="M39 19 L 48 13 L 55 22"/></svg></span>
+            <span class="turn-label visually-hidden" data-i18n="story.turnOver">Turn over</span>
+          </button>
+        </div>
+        <div class="story-v" data-v="1" hidden>
+          <!-- a card with two sides (flip.js): the TL;DR on the front; turn it over for the two of them as toddlers -->
+          <div class="face face-front">
+            <p data-i18n-html="story.tldr.1">A Swedish tech nerd, a Honduran baddie, and a libertarian island with questionable dating prospects.</p>
+            <p data-i18n-html="story.tldr.2">Andrea had been asking God for her dream man; Lonis had accepted that his bloodline was ending. Then they met. She got her prayers answered, he got lucky, and his curly hair sealed the deal.</p>
+            <p data-i18n-html="story.tldr.3">They went from building a free city to building a life and a family, and their favorite adventure is still the everyday one, together. Now they’re in San Francisco, happily AI-pilled and dreaming up what’s next.</p>
+            <p data-i18n-html="story.tldr.4">They can’t wait to celebrate with you! <span class="emoji">❤️</span></p>
+            <div class="peek" aria-hidden="true"></div>
+          </div>
+          <div class="face face-back" hidden>
+            <div class="polaroids">
+              <figure data-scene="0.4" class="polaroid"><img data-photo="lonisKid" alt="Lonis as a toddler in Sweden" data-i18n-attr="alt:story.lonisKidAlt"></figure>
+              <figure data-scene="0.62" class="polaroid"><img data-photo="andreaKid" alt="Andrea as a toddler in Honduras" data-i18n-attr="alt:story.andreaKidAlt"></figure>
+            </div>
+            <p class="face-line" data-i18n="story.babies">Lonis has been serving since the day he was born. Andrea has been rocking crop tops and low-rise before she could walk. Somehow, these two found each other, and now they’re building a life together.</p>
+          </div>
+          <button class="turn" type="button" aria-pressed="false">
+            <span class="turn-hint" aria-hidden="true"><span data-i18n="story.turnHint">psst, turn the page</span><svg viewBox="0 0 64 44" width="64" height="44"><path class="th-line" d="M6 38 C 20 42, 38 36, 48 14"/><path class="th-head" d="M39 19 L 48 13 L 55 22"/></svg></span>
+            <span class="turn-label visually-hidden" data-i18n="story.turnOver">Turn over</span>
+          </button>
+        </div>
+        <div class="story-v" data-v="2" hidden>
+          <!-- a card with two sides (flip.js): the one-liner on the front; turn it over for the proof -->
+          <div class="face face-front">
+            <p class="story-short" data-i18n-html="story.short">Libertarian island. Zero women. One baddie. Bloodline saved. <span class="emoji">❤️</span></p>
+            <div class="peek" aria-hidden="true"></div>
+          </div>
+          <div class="face face-back" hidden>
+            <div class="polaroids">
+              <figure data-scene="0.96" class="polaroid polaroid-land"><img data-photo="bloodline" class="pin-bottom" alt="Lonis and Andrea upside down in a mirror room full of glowing coloured dots" data-i18n-attr="alt:story.bloodlineAlt"></figure>
+              <figure data-scene="0.45" class="polaroid polaroid-land"><img data-photo="gondola" alt="Lonis and Andrea high up in a gondola above the forest and the sea" data-i18n-attr="alt:story.gondolaAlt"></figure>
+            </div>
+            <p class="face-line" data-i18n="story.upsideDown">Head over heels, in every sense.</p>
+          </div>
+          <button class="turn" type="button" aria-pressed="false">
+            <span class="turn-hint" aria-hidden="true"><span data-i18n="story.turnHint">psst, turn the page</span><svg viewBox="0 0 64 44" width="64" height="44"><path class="th-line" d="M6 38 C 20 42, 38 36, 48 14"/><path class="th-head" d="M39 19 L 48 13 L 55 22"/></svg></span>
+            <span class="turn-label visually-hidden" data-i18n="story.turnOver">Turn over</span>
+          </button>
+        </div>
+        <div class="story-v" data-v="3" hidden>
+          <!-- a card with two sides (flip.js): the one-liner on the front; turn it over for the two of them on Roatán -->
+          <div class="face face-front">
+            <p class="story-emoji" aria-label="Sweden, a tech nerd and a laptop, plus Honduras and a manicure, plus an island, equals a ring" data-i18n-attr="aria-label:story.emojiLabel"><span class="emoji">🇸🇪🤓💻</span> + <span class="emoji">🇭🇳💅</span> + <span class="emoji">🏝️</span> = <span class="emoji">💍</span></p>
+            <div class="peek" aria-hidden="true"></div>
+          </div>
+          <div class="face face-back" hidden>
+            <figure data-scene="0.78" class="polaroid polaroid-wide"><img data-photo="roatan" alt="Lonis and Andrea looking out over the sea on Roatán" data-i18n-attr="alt:story.roatanAlt"></figure>
+            <p class="face-line" data-i18n="story.emojiCaption">A picture is worth a thousand words, I guess.</p>
+          </div>
+          <button class="turn" type="button" aria-pressed="false">
+            <span class="turn-hint" aria-hidden="true"><span data-i18n="story.turnHint">psst, turn the page</span><svg viewBox="0 0 64 44" width="64" height="44"><path class="th-line" d="M6 38 C 20 42, 38 36, 48 14"/><path class="th-head" d="M39 19 L 48 13 L 55 22"/></svg></span>
+            <span class="turn-label visually-hidden" data-i18n="story.turnOver">Turn over</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="inner">
+      <div class="head-row">
+        <h2 data-i18n="day.title">Rösås, Bäckaby</h2>
+        <a class="pill" href="https://www.google.com/maps/search/?api=1&amp;query=R%C3%B6s%C3%A5s%20B%C3%A4ckaby" rel="noopener" target="_blank" data-i18n="day.maps">Open in maps</a>
+      </div>
+      <!-- a card with two sides (flip.js): the day on the front; turn it over for Rösås in summer and
+           in the snow (two films, one under the other), then the bridge over the pond and a borrowed dog -->
+      <div class="flip-card" data-card="rosas">
+        <div class="face face-front">
+          <p data-i18n="day.intro">Lonis’s favorite place from childhood, in their favorite sunny season. In June the Swedish sun barely sets, so expect a long, golden evening in the countryside with the people they love most.</p>
+
+          <dl class="facts">
+            <div><dt data-i18n="day.when">When</dt><dd><span class="line" data-i18n="day.whenValue">Saturday, June 12, 2027</span><span class="line note" data-i18n="day.whenTime">Time to be announced</span></dd></div>
+            <div><dt data-i18n="day.where">Where</dt><dd data-i18n="day.whereValue">Rösås, Bäckaby, Sweden</dd></div>
+            <div><dt data-i18n="day.dress">Dress</dt><dd><span class="line" data-i18n="day.dressValue">Summer formal</span><span class="line note" data-i18n="day.dressNote">Heels are welcome, but the celebration will most likely be outdoors (weather permitting), so bring shoes that can handle grass and dancing.</span></dd></div>
+            <div><dt data-i18n="day.honduras">Honduras</dt><dd data-i18n="day.hondurasValue">A celebration in Honduras is coming too. Details to be announced.</dd></div>
+          </dl>
+          <div class="peek" aria-hidden="true"></div>
+        </div>
+        <div class="face face-back" hidden>
+          <figure data-scene="0.66" class="polaroid polaroid-wide"><video muted loop playsinline preload="none" poster="rosas.jpg" aria-label="A red Swedish house on a hill above a meadow of clover in summer" data-i18n-attr="aria-label:day.filmAlt"><source src="rosas.mp4" type="video/mp4"></video></figure>
+          <figure data-scene="0.92" class="polaroid polaroid-wide"><video muted loop playsinline preload="none" poster="rosas-winter.jpg" aria-label="Two people walking up a snowy road towards the red house and a big bare oak in winter" data-i18n-attr="aria-label:day.winterAlt"><source src="rosas-winter.mp4" type="video/mp4"></video></figure>
+          <div class="polaroids">
+            <figure data-scene="0.5" class="polaroid polaroid-land"><img data-photo="rosasBridge" alt="A little wooden bridge over a pond with water lilies, among green trees" data-i18n-attr="alt:day.bridgeAlt"></figure>
+            <figure data-scene="0.36" class="polaroid polaroid-land"><img data-photo="rosasDog" alt="Andrea and Lonis in the sun with a big fluffy dog" data-i18n-attr="alt:day.dogAlt"></figure>
+          </div>
+        </div>
+        <button class="turn" type="button" aria-pressed="false">
+          <span class="turn-hint" aria-hidden="true"><span data-i18n="story.turnHint">psst, turn the page</span><svg viewBox="0 0 64 44" width="64" height="44"><path class="th-line" d="M6 38 C 20 42, 38 36, 48 14"/><path class="th-head" d="M39 19 L 48 13 L 55 22"/></svg></span>
+          <span class="turn-label visually-hidden" data-i18n="story.turnOver">Turn over</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="inner">
+      <div class="head-row">
+        <h2 data-i18n="schedule.title">The weekend</h2>
+        <details class="cal">
+          <summary class="pill" data-i18n="schedule.calendar">Add to calendar</summary>
+          <div class="cal-menu">
+            <!-- each one adds all three days; calendar.js fills in Google's link (it needs the site's own address) -->
+            <a class="cal-google" href="https://calendar.google.com/calendar/r" target="_blank" rel="noopener" data-i18n="cal.google">Google Calendar</a>
+            <a href="wedding.ics" data-i18n="cal.apple">Apple Calendar</a>
+            <a href="wedding.ics" download="lonis-andrea-weekend.ics" data-i18n="cal.outlook">Outlook</a>
+          </div>
+        </details>
+      </div>
+
+      <!-- a card with two sides (flip.js): the three days on the front; turn it over for Sunday,
+           a little film of the football and the jetty at the lake in Ramkvilla -->
+      <div class="flip-card" data-card="weekend">
+        <div class="face face-front">
+          <ol class="schedule">
+            <li><span class="time" data-i18n="schedule.1.day">Fri 11</span><span class="what" data-i18n-html="schedule.1"><em>Welcome dinner</em><br>A barbecue to kick things off.</span></li>
+            <li><span class="time" data-i18n="schedule.2.day">Sat 12</span><span class="what" data-i18n-html="schedule.2"><em>The wedding</em><br>Ceremony, dinner, and dancing until the light goes out (or doesn’t).</span></li>
+            <li><span class="time" data-i18n="schedule.3.day">Sun 13</span><span class="what" data-i18n-html="schedule.3"><em>Brunch, swim &amp; football</em><br>Brunch, a swim in the lake at Ramkvilla, and evening football, a Lonis and Andrea tradition.</span></li>
+          </ol>
+          <div class="peek" aria-hidden="true"></div>
+        </div>
+        <div class="face face-back" hidden>
+          <div class="polaroids">
+            <figure data-scene="0.72" class="polaroid polaroid-tall"><video muted loop playsinline preload="none" poster="football.jpg" aria-label="Lonis, Andrea and friends playing football on a pitch at sunset" data-i18n-attr="aria-label:schedule.footballAlt"><source src="football.mp4" type="video/mp4"></video></figure>
+            <figure data-scene="0.4" class="polaroid"><img data-photo="ramkvilla" alt="Lonis on a wooden jetty at a forest lake, with a little dog" data-i18n-attr="alt:schedule.swimAlt"></figure>
+          </div>
+        </div>
+        <button class="turn" type="button" aria-pressed="false">
+          <span class="turn-hint" aria-hidden="true"><span data-i18n="story.turnHint">psst, turn the page</span><svg viewBox="0 0 64 44" width="64" height="44"><path class="th-line" d="M6 38 C 20 42, 38 36, 48 14"/><path class="th-head" d="M39 19 L 48 13 L 55 22"/></svg></span>
+          <span class="turn-label visually-hidden" data-i18n="story.turnOver">Turn over</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Travel times checked on Google Maps (driving from Bäckaby) and on train planners, Oct 2026 -->
+  <section class="sec">
+    <div class="inner">
+      <h2 data-i18n="travel.title">Getting there</h2>
+      <p data-i18n="travel.intro">Rösås is near Bäckaby, deep in the countryside, about half an hour south of Vetlanda. It’s wonderfully in the middle of nowhere, so on the wedding day we’ll arrange transportation from Vetlanda. Details to come.</p>
+
+      <!-- three groups that open and close; all closed to start with -->
+      <div class="accordion">
+        <details class="acc">
+          <summary data-i18n="travel.america">International</summary>
+          <dl class="facts">
+            <div><dt data-i18n="travel.americaAir">By air</dt><dd data-i18n="travel.americaAirValue">Fly into Copenhagen, usually the easiest, or Stockholm.</dd></div>
+            <div><dt data-i18n="travel.americaTrain">By train</dt><dd><span class="line" data-i18n-html="travel.americaTrainCph"><span class="lead">From Copenhagen:</span> A direct train from the airport reaches Växjö in about 2½ hours, and from there it’s about 50 minutes by car. You can also ride all the way to Vetlanda with a change in Nässjö, but the last leg only runs a few times a day.</span><span class="line gap" data-i18n-html="travel.americaTrainSthlm"><span class="lead">From Stockholm:</span> Direct trains from Stockholm Central to Nässjö run about every hour and take around 3 hours. From there, hop on the local Krösatåg to Vetlanda (about 30 minutes), then it’s about half an hour by car. Landing at Arlanda? Take the Arlanda Express into Stockholm Central first.</span><span class="line note" data-i18n-html="travel.americaTrainNote">Download the <a href="https://www.sj.se/en" target="_blank" rel="noopener">SJ app</a> to check times and buy tickets for every leg, including the local trains.</span></dd></div>
+            <div><dt data-i18n="travel.americaCar">By car</dt><dd data-i18n="travel.americaCarValue">About 3½ hours from Copenhagen Airport, or 4½ from Stockholm.</dd></div>
+          </dl>
+        </details>
+        <details class="acc">
+          <summary data-i18n="travel.sweden">Locals</summary>
+          <dl class="facts">
+            <div><dt data-i18n="travel.swedenAir">By air</dt><dd data-i18n="travel.swedenAirValue">The closest airports are Växjö, about 50 minutes away, and Jönköping, about 1 hour 20.</dd></div>
+            <div><dt data-i18n="travel.swedenTrain">By train</dt><dd data-i18n="travel.swedenTrainValue">From Stockholm, take the train to Nässjö, then the local Krösatåg to Vetlanda, about 30 minutes.</dd></div>
+            <div><dt data-i18n="travel.swedenCar">By car</dt><dd data-i18n="travel.swedenCarValue">About 3 hours from Gothenburg or Malmö, and 4½ from Stockholm.</dd></div>
+          </dl>
+        </details>
+        <details class="acc">
+          <summary data-i18n="travel.stay">Places to stay</summary>
+          <!-- where to stay: each name is its link; prices are approximate -->
+          <div class="stays">
+            <p data-i18n="stay.intro">Most stays are a 30–45 minute drive, and rooms nearby are limited, so we recommend booking early. Prices are rough starting rates per night for two; June may be a little higher.</p>
+            <p class="stay-group" data-i18n-html="stay.close">Close &amp; easy · Vetlanda (about 30 min)</p>
+            <div class="stay">
+              <p class="stay-name"><a href="https://www.ca.kayak.com/Vetlanda-Hotels-Kvarndammens-Bed-Breakfast.2063987.ksp" target="_blank" rel="noopener">KvarnDammens Bed &amp; Breakfast</a></p>
+              <p class="stay-text" data-i18n="stay.close1">A cozy guesthouse near the town center, loved for its breakfast.</p>
+              <p class="stay-price" data-i18n="stay.close1Price">From about $75 · 9.1/10</p>
+            </div>
+            <div class="stay">
+              <p class="stay-name"><a href="https://maps.google.com/?cid=4459178701799087742" target="_blank" rel="noopener">Centralhotellet</a></p>
+              <p class="stay-text" data-i18n="stay.close2">Right across from the train station, with breakfast and a sauna.</p>
+              <p class="stay-price" data-i18n="stay.close2Price">From about $165 · 7.7/10</p>
+            </div>
+            <div class="stay">
+              <p class="stay-name"><a href="https://www.bestwestern.com/en_US/book/hotel-details.88132.html" target="_blank" rel="noopener">Best Western Vetlanda Stadshotell</a></p>
+              <p class="stay-text" data-i18n="stay.close3">A classic hotel on the town square, breakfast included.</p>
+              <p class="stay-price" data-i18n="stay.close3Price">From about $170 · 7.7/10</p>
+            </div>
+            <p class="stay-group" data-i18n-html="stay.special">Special stays · Worth the drive</p>
+            <div class="stay">
+              <p class="stay-name"><a href="https://traktforesthotel.com" target="_blank" rel="noopener">Trakt Forest Hotel · Holsbybrunn <span data-i18n="stay.about45">(about 45 min)</span></a></p>
+              <p class="stay-text" data-i18n="stay.special1">Architect-designed forest suites on stilts with a skylight over the bed, a forest spa and a farm-to-table restaurant.</p>
+              <p class="stay-price" data-i18n="stay.special1Price">Rooms from about $200 · Forest suites about $760, breakfast included · 4.9/5</p>
+            </div>
+            <div class="stay">
+              <p class="stay-name"><a href="https://www.wallby.se" target="_blank" rel="noopener">Wallby Säteri · Skirö <span data-i18n="stay.about45">(about 45 min)</span></a></p>
+              <p class="stay-text" data-i18n="stay.special2">A lakeside manor farm with red cottages, a wood-fired sauna, boats and home-cooked dinners.</p>
+              <p class="stay-price" data-i18n="stay.special2Price">Rooms about $240–270 · Cottages about $340–380, breakfast included · 4.7/5</p>
+            </div>
+            <div class="stay">
+              <p class="stay-name"><a href="https://www.asaherrgard.se" target="_blank" rel="noopener">Asa Herrgård · <span data-i18n="stay.near">Near</span> Lammhult <span data-i18n="stay.about35">(about 35 min)</span></a></p>
+              <p class="stay-text" data-i18n="stay.special3">A 1700s manor on a lake, in an official quiet zone, with a sauna and hot tub.</p>
+              <p class="stay-price" data-i18n="stay.special3Price">From about $165 per person, with breakfast, sauna and hot tub · 4.5/5</p>
+            </div>
+            <p class="stay-group" data-i18n-html="stay.value">Good value · Great for groups</p>
+            <div class="stay">
+              <p class="stay-name"><a href="https://adelforshotell.nu" target="_blank" rel="noopener">Ädelfors Hotell · Holsbybrunn <span data-i18n="stay.about35">(about 35 min)</span></a></p>
+              <p class="stay-text" data-i18n="stay.value1">A calm, simple forest hotel with 55 rooms and a restaurant. Easy for groups.</p>
+              <p class="stay-price" data-i18n="stay.value1Price">From about $110</p>
+            </div>
+            <p class="stay-group" data-i18n-html="stay.cabins">Cabins &amp; holiday homes</p>
+            <div class="stay">
+              <p class="stay-name"><a href="https://www.hemmafranhemma.com" target="_blank" rel="noopener">Hemma från Hemma · Kvillsfors <span data-i18n="stay.about45">(about 45 min)</span></a></p>
+              <p class="stay-text" data-i18n="stay.cabins1">A cabin for four or a glamping tipi for two, both with a sauna.</p>
+              <p class="stay-price" data-i18n="stay.cabins1Price">Glamping from about $80 · Cabin from about $105 · 4.9/5</p>
+            </div>
+            <div class="stay">
+              <p class="stay-name"><a href="https://www.airbnb.com/rooms/12937547" target="_blank" rel="noopener"><span data-i18n="stay.cabins2Name">Lakeside cottage in Ramkvilla</span> (Airbnb)</a></p>
+              <p class="stay-text" data-i18n="stay.cabins2">A cottage for four by Lake Klockesjön, close to Sunday’s swim.</p>
+              <p class="stay-price" data-i18n="stay.cabins2Price">4.78/5 · Superhost</p>
+            </div>
+            <p class="stay-more"><a href="https://www.airbnb.com/s/Vetlanda--Sweden/homes" target="_blank" rel="noopener" data-i18n="stay.more">More cabins nearby</a></p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <!-- easter egg: the two of us dancing in dots, while the moon is a disco ball (dance.js) -->
+    <canvas class="dance" aria-hidden="true"></canvas>
+    <div class="inner">
+      <h2 data-i18n="rsvp.title">Are you in?</h2>
+      <p data-i18n-html="rsvp.by">Let us know by <em>April 30, 2027</em> if you can make it.</p>
+      <!-- live head count from the RSVP sheet (form.js) -->
+      <p class="headcount" aria-live="polite" hidden><span class="hc-dot" aria-hidden="true"></span><span class="hc-text"></span></p>
+      <button class="rsvp-open" type="button" aria-haspopup="dialog" aria-controls="rsvp" data-i18n="rsvp.button">RSVP</button>
+      <p class="gifts" data-i18n-html="rsvp.gifts"><em>btw,</em> your presence is all the present we could ask for. We feel incredibly grateful that you’re making the journey to Sweden to celebrate with us, so please know that no gifts are expected.</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- The RSVP opens as a card on top of the page -->
+<dialog class="rsvp-card" id="rsvp" aria-labelledby="rsvp-title">
+  <div class="rsvp-body">
+    <button class="rsvp-close" type="button" aria-label="Close" data-i18n-attr="aria-label:form.close">&times;</button>
+    <p class="kicker" data-i18n="form.kicker">RSVP</p>
+    <h2 id="rsvp-title" data-i18n="rsvp.title">Are you in?</h2>
+
+    <form class="contact" name="rsvp" method="POST">
+      <input type="hidden" name="language" value="en">
+      <p class="bot-field"><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+
+      <div class="row">
+        <label class="field">
+          <span data-i18n="form.name">Name</span>
+          <input type="text" name="name" autocomplete="name" required>
+        </label>
+        <label class="field">
+          <span data-i18n="form.email">Email</span>
+          <input type="email" name="email" autocomplete="email" required>
+        </label>
+      </div>
+
+      <div class="row">
+        <label class="field">
+          <span data-i18n="form.attending">Can you make it?</span>
+          <select name="attending" required>
+            <option value="" data-i18n="form.choose">Choose…</option>
+            <option value="yes" data-i18n="form.yes">Yes, wouldn't miss it</option>
+            <option value="no" data-i18n="form.no">Sadly not</option>
+          </select>
+        </label>
+        <label class="field">
+          <span data-i18n="form.guests">How many of you?</span>
+          <input type="number" name="guests" min="1" max="10" value="1">
+        </label>
+      </div>
+
+      <label class="field">
+        <span data-i18n="form.dietary">Anything you can't eat?</span>
+        <input type="text" name="dietary" placeholder="Allergies, vegetarian, the lot" data-i18n-attr="placeholder:form.dietaryHint">
+      </label>
+
+      <label class="field">
+        <span data-i18n="form.song">A song that will get you dancing</span>
+        <input type="text" name="song">
+      </label>
+
+      <label class="field">
+        <span data-i18n="form.else">Anything else</span>
+        <textarea name="message" rows="3"></textarea>
+      </label>
+
+      <button type="submit" data-i18n="form.send">Send it</button>
+      <p class="form-status" role="status" aria-live="polite"></p>
+      <p class="form-again" data-i18n="form.again">Already answered? Send it again with the same email, and we’ll use your latest answer.</p>
+    </form>
+
+    <!-- coming back after answering (form.js remembers the answer on this device): change it -->
+    <div class="rsvp-mine" hidden>
+      <h2 class="done-title mine-yes" data-i18n="mine.yesTitle">You’re coming ✓</h2>
+      <h2 class="done-title mine-no" data-i18n="mine.noTitle">You said you can’t make it</h2>
+      <p class="done-text mine-who"></p>
+      <div class="mine-actions">
+        <button class="mine-btn mine-yes mine-change" type="button" data-i18n="mine.change">Change my details</button>
+        <button class="mine-btn mine-quiet mine-yes mine-cancel" type="button" data-i18n="mine.cancel">I can’t make it anymore</button>
+        <button class="mine-btn mine-no mine-come" type="button" data-i18n="mine.come">Actually, I can come!</button>
+      </div>
+      <details class="cal cal-yes mine-yes">
+        <summary class="pill cal-pill">
+          <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><rect x="2.5" y="4" width="15" height="13.5" rx="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M2.5 8.2h15M6.5 2.5v3M13.5 2.5v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M10 15.4s-3-1.8-3-3.6c0-.9.7-1.6 1.5-1.6.6 0 1.1.3 1.5.9.4-.6.9-.9 1.5-.9.8 0 1.5.7 1.5 1.6 0 1.8-3 3.6-3 3.6z" fill="currentColor"/></svg>
+          <span data-i18n="schedule.calendar">Add to calendar</span>
+        </summary>
+        <div class="cal-menu">
+          <a class="cal-google" href="https://calendar.google.com/calendar/r" target="_blank" rel="noopener" data-i18n="cal.google">Google Calendar</a>
+          <a href="wedding.ics" data-i18n="cal.apple">Apple Calendar</a>
+          <a href="wedding.ics" download="lonis-andrea-weekend.ics" data-i18n="cal.outlook">Outlook</a>
+        </div>
+      </details>
+      <div class="mine-sure" hidden>
+        <p class="done-note" data-i18n="mine.sure">Sure? We’ll miss you.</p>
+        <div class="mine-actions">
+          <button class="mine-btn mine-cancel-yes" type="button" data-i18n="mine.yesCancel">Yes, cancel</button>
+          <button class="mine-btn mine-quiet mine-cancel-no" type="button" data-i18n="mine.keep">Keep me in</button>
+        </div>
+      </div>
+      <p class="form-status mine-status" role="status" aria-live="polite"></p>
+    </div>
+
+    <!-- after sending (form.js): a little party for a yes, a soft landing for a no -->
+    <div class="rsvp-done rsvp-yes" hidden>
+      <canvas class="party" aria-hidden="true"></canvas>
+      <h2 class="done-title" data-i18n="done.yesTitle">Woohoo!</h2>
+      <p class="done-text" data-i18n="done.yesText">See you on June 12 ❤️</p>
+      <!-- add the weekend to your calendar, right after saying yes (the same three days as beside The Weekend) -->
+      <details class="cal cal-yes">
+        <summary class="pill cal-pill">
+          <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><rect x="2.5" y="4" width="15" height="13.5" rx="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M2.5 8.2h15M6.5 2.5v3M13.5 2.5v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M10 15.4s-3-1.8-3-3.6c0-.9.7-1.6 1.5-1.6.6 0 1.1.3 1.5.9.4-.6.9-.9 1.5-.9.8 0 1.5.7 1.5 1.6 0 1.8-3 3.6-3 3.6z" fill="currentColor"/></svg>
+          <span data-i18n="schedule.calendar">Add to calendar</span>
+        </summary>
+        <div class="cal-menu">
+          <a class="cal-google" href="https://calendar.google.com/calendar/r" target="_blank" rel="noopener" data-i18n="cal.google">Google Calendar</a>
+          <a href="wedding.ics" data-i18n="cal.apple">Apple Calendar</a>
+          <a href="wedding.ics" download="lonis-andrea-weekend.ics" data-i18n="cal.outlook">Outlook</a>
+        </div>
+      </details>
+      <p class="done-note" data-i18n="done.yesNote">Stay tuned for updates by email or text</p>
+    </div>
+    <div class="rsvp-done rsvp-no" hidden>
+      <canvas class="sad" aria-hidden="true"></canvas>
+      <h2 class="done-title" data-i18n="done.noTitle">We’re fine. Totally fine.</h2>
+      <p class="done-text" data-i18n="done.noText">We’ll dance one for you ❤️</p>
+    </div>
+  </div>
+</dialog>
+
+
+<!-- a photo or film from the back of a card, big (lightbox.js) -->
+<dialog class="lightbox" aria-label="Photo" data-i18n-attr="aria-label:lb.title">
+  <button class="lb-close" type="button" aria-label="Close" data-i18n-attr="aria-label:form.close">&times;</button>
+  <figure class="polaroid lb-photo"></figure>
+</dialog>
+
+<!-- every photo and film, as polaroids floating over the landscape (gallery.js). thebebs.com/gallery opens it. -->
+<dialog class="gallery" aria-labelledby="gallery-title">
+  <div class="g-inner"></div>
+</dialog>
+
+<script src="i18n.js?v=40"></script>
+<script src="theme.js?v=1"></script>
+<script src="photo.js?v=1"></script>
+<script src="photo-light.js?v=4"></script>
+<script src="art.js?v=117"></script>
+<script src="track.js?v=4"></script>
+<script src="form.js?v=14"></script>
+<script src="countdown.js?v=3"></script>
+<script src="story.js?v=8"></script>
+<script src="storyphotos.js?v=7"></script>
+<script src="flip.js?v=12"></script>
+<script src="lightbox.js?v=8"></script>
+<script src="gallery.js?v=9"></script>
+<script src="calendar.js?v=4"></script>
+<script src="layout.js?v=5"></script>
+<script src="dancephoto.js?v=3"></script>
+<script src="sadphoto.js?v=2"></script>
+<script src="partyphoto.js?v=5"></script>
+<script src="dance.js?v=29"></script>
+<script src="music.js?v=18"></script>
+</body>
+</html>

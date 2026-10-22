@@ -1,0 +1,41 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Lonis & Andrea//Wedding//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Lonis & Andrea
+X-WR-CALDESC:Lonis & Andrea’s wedding weekend\, June 11–13\, 2027
+BEGIN:VEVENT
+UID:welcome-20270611@lonis-andrea
+DTSTAMP:20261018T120000Z
+DTSTART;VALUE=DATE:20270611
+DTEND;VALUE=DATE:20270612
+SEQUENCE:0
+SUMMARY:Lonis & Andrea · Welcome dinner
+DESCRIPTION:A barbecue to kick things off.
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+UID:wedding-20270612@lonis-andrea
+DTSTAMP:20261018T120000Z
+DTSTART;VALUE=DATE:20270612
+DTEND;VALUE=DATE:20270613
+SEQUENCE:0
+SUMMARY:Lonis & Andrea’s wedding
+LOCATION:Rösås\, Bäckaby\, Sweden
+DESCRIPTION:Ceremony\, dinner\, and dancing until the light goes out (or do
+ esn’t). Time to be announced.
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+UID:sunday-20270613@lonis-andrea
+DTSTAMP:20261018T120000Z
+DTSTART;VALUE=DATE:20270613
+DTEND;VALUE=DATE:20270614
+SEQUENCE:0
+SUMMARY:Lonis & Andrea · Brunch\, swim & football
+DESCRIPTION:Brunch\, a swim in the lake at Ramkvilla\, and evening football
+ \, a Lonis and Andrea tradition.
+TRANSP:OPAQUE
+END:VEVENT
+END:VCALENDAR

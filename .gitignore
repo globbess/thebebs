@@ -1,0 +1,4 @@
+.DS_Store
+
+# the Google Sheet script has a personal email in it: it lives in Google, not on the site
+rsvp-sheet.gs
