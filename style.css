@@ -987,7 +987,14 @@ body.disco .dance{ opacity: 1; transform: none; }
 /* ---------- live head count above the RSVP button (form.js) ---------- */
 .headcount{ display: flex; align-items: center; gap: 10px; margin: -4px 0 22px; }
 /* the note under the RSVP button: smaller, a little aside */
-.sec .gifts{ margin: 26px 0 0; max-width: 46ch; font-size: var(--fs-ui); line-height: 1.6; }
+.sec .gifts{
+  margin: -16px 0 0 -14px; padding: 11px 14px 12px; max-width: 48ch;
+  font-size: clamp(15px, 1.3vw, 18px); line-height: 1.6; color: var(--ink);
+  /* a soft frosted backing (white in light mode, night in dark), so it reads over the dots */
+  background: rgba(var(--shade-rgb),.62); border-radius: 16px;
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  text-shadow: none;
+}
 .headcount[hidden]{ display: none; }
 .hc-dot{
   flex: none; width: 8px; height: 8px; border-radius: 50%;
