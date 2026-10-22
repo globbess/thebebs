@@ -342,7 +342,7 @@ button:focus-visible, a:focus-visible{ outline: 2px solid var(--accent); outline
   .menu{ max-width: none; padding-left: 0; padding-right: 0; padding-block: 0 40px; }
   .hero{ height: 100svh; min-height: 560px; }
   .hero-text{ padding: calc(18px + env(safe-area-inset-top, 0px)) 120px 0; text-align: center; }
-  /* four on the left, three on the right set between them (eight half-rows, each card two) */
+  /* four on each side (eight half-rows, each card two) */
   .games{
     position: absolute; left: 0; right: 0; top: 0; height: 100svh; min-height: 560px; margin: 0;
     padding: calc(70px + env(safe-area-inset-top, 0px)) max(24px, env(safe-area-inset-right, 0px)) 22px max(24px, env(safe-area-inset-left, 0px));
@@ -355,8 +355,8 @@ button:focus-visible, a:focus-visible{ outline: 2px solid var(--accent); outline
   .games li:nth-child(n+5){ grid-column: 3; }
   .games li:nth-child(1){ grid-row: 1 / span 2; } .games li:nth-child(2){ grid-row: 3 / span 2; }
   .games li:nth-child(3){ grid-row: 5 / span 2; } .games li:nth-child(4){ grid-row: 7 / span 2; }
-  .games li:nth-child(5){ grid-row: 2 / span 2; } .games li:nth-child(6){ grid-row: 4 / span 2; }
-  .games li:nth-child(7){ grid-row: 6 / span 2; }
+  .games li:nth-child(5){ grid-row: 1 / span 2; } .games li:nth-child(6){ grid-row: 3 / span 2; }
+  .games li:nth-child(7){ grid-row: 5 / span 2; } .games li:nth-child(8){ grid-row: 7 / span 2; }
   .games .game-card{ height: auto; gap: 5px; padding: 6px 6px 8px; }
   .games .game-card .blurb{ display: none; }
   .games .game-card .name{ font-size: 14px; }
@@ -438,3 +438,10 @@ button:focus-visible, a:focus-visible{ outline: 2px solid var(--accent); outline
 .tv-bubble::before{ width: 12px; height: 12px; right: 6px; bottom: -10px; }
 .tv-bubble::after{ width: 7px; height: 7px; right: -2px; bottom: -19px; }
 @keyframes bubble-in{ from{ opacity: 0; transform: translate(-92%, -80%) scale(.8); } to{ opacity: 1; transform: translate(-92%, -100%) scale(1); } }
+/* a game that's coming soon: dimmed, with its tag, and a wiggle when tapped */
+.game-card.soon{ cursor: default; }
+.game-card.soon canvas{ filter: saturate(.85) brightness(.8); }
+.game-card.soon .best{ color: var(--warm); }
+.game-card.wiggle{ animation: wiggle .5s ease-in-out; }
+@keyframes wiggle{ 20%{ transform: rotate(-3deg); } 45%{ transform: rotate(3deg); } 70%{ transform: rotate(-2deg); } 100%{ transform: none; } }
+.games .game-card.soon .best{ display: block; }   /* its 'Coming soon' shows on wide screens too */

@@ -189,7 +189,7 @@
     });
     return box;
   }
-  const ORDER = ['run', 'kick', 'dress', 'sun', 'trivia', 'list', 'chess'];
+  const ORDER = ['run', 'kick', 'dress', 'trivia', 'sun', 'chess', 'list', 'song'];
   function buildMenu() {
     list.innerHTML = '';
     games.slice().sort((a, b) => ORDER.indexOf(a.id) - ORDER.indexOf(b.id)).forEach(def => {
@@ -201,9 +201,12 @@
       cv.setAttribute('aria-hidden', 'true');
       const nm = document.createElement('span'); nm.className = 'name'; nm.textContent = def.name;
       const bl = document.createElement('span'); bl.className = 'blurb'; bl.textContent = def.blurb;
-      const be = document.createElement('span'); be.className = 'best'; be.textContent = bestText(def);
+      const be = document.createElement('span'); be.className = 'best'; be.textContent = def.soon ? 'Coming soon' : bestText(def);
       b.append(cv, nm, bl, be);
-      b.addEventListener('click', () => go(def.id));
+      if (def.soon) {                                   // not playable yet: it just wiggles
+        b.classList.add('soon'); b.setAttribute('aria-disabled', 'true');
+        b.addEventListener('click', () => { b.classList.remove('wiggle'); void b.offsetWidth; b.classList.add('wiggle'); });
+      } else b.addEventListener('click', () => go(def.id));
       li.appendChild(b);
       list.appendChild(li);
       thumbs.push({ def, st: new D.Stage(cv), cv, be });
@@ -232,7 +235,7 @@
       if (th.def.thumbBackdrop !== false) thumbBackdrop(th.st.g, th.st.w, th.st.h, th.def);
       th.def.thumb(th.st.g, th.st.w, th.st.h, 1200);
       th.st.render();
-      th.be.textContent = bestText(th.def);
+      th.be.textContent = th.def.soon ? 'Coming soon' : bestText(th.def);
     });
   }
 

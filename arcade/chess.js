@@ -231,7 +231,7 @@
   }
 
   const game = {
-    id: 'chess', name: 'Bebchess', thumbBackdrop: false,          // the board fills its picture kicker: 'Game 7', panel: true, scene: 0.985, disco: true,
+    id: 'chess', name: 'Bebchess', thumbBackdrop: false,          // the board fills its picture kicker: 'Game 6', panel: true, scene: 0.985, disco: true,
     blurb: 'Team Andrea against Team Lonis. His pieces are black, obviously.',
     // the board fills the width (or the height left between Team Lonis and the panel): 8 squares of SQ dots
     get cell() { return Math.max(2.4, Math.min(window.innerWidth - 24, window.innerHeight - 380) / (SQ * 8)); },

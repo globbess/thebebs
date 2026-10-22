@@ -133,7 +133,7 @@
 
   // what Lonis thinks of your answer, in a bubble over his head
   const SAYS = {
-    rightBoth: ['I taught you that 🔥', 'Correct 🔥', 'Someone’s been reading my blog 🔥', 'Proud of you 🔥'],
+    rightBoth: ['I taught you that 🔥', 'Correct 🔥', 'Someone’s been reading my blog 🔥', 'Too easy 🔥'],
     rightOnly: ['…ok bro, you got me 💀', 'Don’t tell anyone 💀', 'Who taught you THAT? 🔥', 'Fine. Point to you 💀'],
     wrongHim: ['Bro 💀', 'Not even close 💀', 'Bro. We need to talk 💀', 'Oh no 💀 read my blog'],
     wrongBoth: ['Let’s pretend that didn’t happen 💀', 'Neither of us? Next, bro.', '💀 skip']
@@ -173,7 +173,7 @@
   }
 
   const game = {
-    id: 'trivia', name: 'Trivia', kicker: 'Game 5', panel: true,
+    id: 'trivia', name: 'Trivia', kicker: 'Game 4', panel: true,
     blurb: 'Beat Lonis in a quiz on his favorite things.',
     thumbScene: () => (D.light ? 0.985 : 0.93),
     sceneAt: () => (D.light ? 0.985 : 0.93),
