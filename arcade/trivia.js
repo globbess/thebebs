@@ -133,10 +133,10 @@
 
   // what Lonis thinks of your answer, in a bubble over his head
   const SAYS = {
-    rightBoth: ['I taught you that 🔥', 'Correct 🔥', 'Someone’s been reading my blog 🔥', 'Proud of you 🔥'],
-    rightOnly: ['…ok, you got me 💀', 'Don’t tell anyone 💀', 'Who taught you THAT? 🔥', 'Fine. Point to you 💀'],
-    wrongHim: ['💀💀💀', 'Not even close 💀', 'We need to talk 💀', 'Oh no 💀 read my blog'],
-    wrongBoth: ['Let’s pretend that didn’t happen 💀', 'Neither of us? Next.', '💀 skip']
+    rightBoth: ['I taught you that 🔥', 'Correct 🔥', 'Someone’s been reading my blog 🔥', 'That’s my bro 🔥'],
+    rightOnly: ['…ok bro, you got me 💀', 'Don’t tell anyone 💀', 'Who taught you THAT? 🔥', 'Fine. Point to you 💀'],
+    wrongHim: ['Bro 💀', 'Not even close 💀', 'Bro. We need to talk 💀', 'Oh no 💀 read my blog'],
+    wrongBoth: ['Let’s pretend that didn’t happen 💀', 'Neither of us? Next, bro.', '💀 skip']
   };
   function bubble(api, kind) {
     const old = api.el.querySelector('.tv-bubble'); if (old) old.remove();
