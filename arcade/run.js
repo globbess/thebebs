@@ -28,7 +28,7 @@
     hay:      { rows: ['########', '#y#y#y##', '########', '##y#y#y#', '########', '########'], map: { '#': [230, 180, 70], y: [190, 140, 40] } },
     moose:    { rows: ['#.#..#.#....', '###..###....', '.######.....', '..####......', '..#####.....', '..########..', '...#########', '...#########', '...########.', '...#.#..#.#.', '...#.#..#.#.', '...#.#..#.#.', '...#.#..#.#.'], map: { '#': [120, 80, 50] } },
     // Stockholm: an e-scooter left on the pavement, a city bike, a Dala horse
-    scooter:  { rows: ['.....hh.', '......#.', '......#.', '......#.', '.....#..', '#######.', 'o.....o.'], map: { '#': [240, 92, 112], h: [40, 36, 48], o: [70, 66, 84] } },
+    scooter:  { rows: ['.....hh.', '......#.', '......#.', '......#.', '.....#..', '#######.', 'o.....o.'], map: { '#': [126, 206, 70], h: [40, 36, 48], o: [70, 66, 84] } },   // someone else's, green
     bike:     { rows: ['....ss.hh.', '.....#.#..', '...#####..', '.oo#..#oo.', 'o..o##o..o', 'o..o..o..o', '.oo....oo.'], map: { '#': [52, 130, 210], s: [40, 36, 48], h: [40, 36, 48], o: [110, 106, 124] } },
     dala:     { rows: ['..##.....', '.###.....', '####.....', '..##.....', '..#######', '..#y#g#y#', '..#######', '..##...##', '..##...##'], map: { '#': [204, 34, 44], y: [255, 214, 90], g: [90, 170, 90] } }
   };
@@ -165,6 +165,28 @@
     return { top: gy - r - deckH };
   }
 
+  // Stockholm: the two of them on one pink Voi, Andrea in front holding the bars, Lonis behind her
+  function voi(g, cx, gy, u) {
+    const pink = [246, 112, 150], dark = [40, 34, 48], r = Math.max(2, Math.round(1.7 * u));
+    const x0 = Math.round(cx - 10 * u), x1 = Math.round(cx + 9 * u), deckY = gy - 2 * r;
+    g.fillStyle = rgb(pink); g.fillRect(x0, deckY - 1, x1 - x0, 2);                       // the deck
+    g.fillStyle = rgb(dark); g.fillRect(x0 + 1, deckY + 1, x1 - x0 - 2, 1);
+    g.fillStyle = rgb(pink);
+    for (let i = 0; i < 15 * u; i++) g.fillRect(Math.round(x1 + i * 0.12), Math.round(deckY - 1 - i), 2, 1);   // the stem
+    const topX = Math.round(x1 + 15 * u * 0.12), topY = Math.round(deckY - 1 - 15 * u);
+    g.fillStyle = rgb(pink); g.fillRect(topX - Math.round(3 * u), topY, Math.round(4 * u) + 1, 2);              // handlebar
+    g.fillStyle = rgb(dark); g.fillRect(topX - Math.round(3 * u), topY, 1, 2);                                   // its grip
+    g.fillStyle = rgb([255, 250, 230]); g.fillRect(topX + 1, topY + 2, 1, 1);                                    // its light
+    [x0 + r, x1].forEach(wx => {                                                                                // wheels
+      for (let yy = -r; yy <= r; yy++) for (let xx = -r; xx <= r; xx++) {
+        const d = xx * xx + yy * yy;
+        if (d > r * r + 0.5) continue;
+        g.fillStyle = rgb(d < 1.5 ? [210, 206, 220] : dark); g.fillRect(wx + xx, gy - r + yy, 1, 1);
+      }
+    });
+    return { feet: deckY - 1 };
+  }
+
   function cottage(g, x, gy, s) {
     const red = D.light ? [178, 40, 34] : PAL.falu, white = [250, 246, 240];
     g.fillStyle = rgb(red); g.fillRect(Math.round(x), Math.round(gy - s), Math.round(s * 1.6), Math.round(s));
@@ -219,7 +241,7 @@
   const game = {
     id: 'run', name: 'Island to Sweden', kicker: 'Game 4',
     blurb: 'Run from Roatán through San Francisco to Rösås.',
-    how: 'Three stops on the way to the wedding: Roatán, San Francisco, then Stockholm. Make it through one and the next unlocks (San Francisco comes with a matte black Roadster); get through all three to reach Rösås. Tap to jump, tap again in the air to jump higher. Collect hearts and dodge crabs, robotaxis and e-scooters. You have three lives.',
+    how: 'Three stops on the way to the wedding: Roatán, San Francisco, then Stockholm. Make it through one and the next unlocks (San Francisco comes with a matte black Roadster, Stockholm with a pink Voi for two); get through all three to reach Rösås. Tap to jump, tap again in the air to jump higher. Collect hearts and dodge crabs, robotaxis and e-scooters. You have three lives.',
     better: 'high', disco: false, thumbScene: 0.7,
     sceneAt: () => S ? LEVELS[S.lv].p : LEVELS[0].p,
     fmt: v => v + ' ♡',
@@ -242,7 +264,7 @@
       const w = api.st.w, h = api.st.h, gy = Math.round(h * 0.8), u = h / 112;
       S.t += dt;
       const lv = Math.min(2, Math.floor(S.t / LEVEL_T));
-      if (lv !== S.lv) { S.lv = lv; S.fade = 1; api.toast('Next stop: ' + LEVELS[lv].name + (lv === 1 ? ' 🚗' : ''), w * 0.5, h * 0.3, 'big warm'); stripAll(api); }
+      if (lv !== S.lv) { S.lv = lv; S.fade = 1; api.toast('Next stop: ' + LEVELS[lv].name + (lv === 1 ? ' 🚗' : lv === 2 ? ' 🛴' : ''), w * 0.5, h * 0.3, 'big warm'); stripAll(api); }
       S.fade = Math.max(0, S.fade - dt * 0.8);
       const speed = (S.done ? 0 : LEVELS[S.lv].speed + (S.t % LEVEL_T) * 0.25) * Math.max(1, w / 72);
       S.scroll += speed * dt;
@@ -319,6 +341,10 @@
         const seat = feet + 6 * u;                                     // sitting low: from the waist up shows
         Bebs.andrea(g, px - 3 * u, seat, u, { pose: 'stand', t: now / 1000, cut: (seat - car.top - u) / (24 * u) });
         Bebs.lonis(g, px + 6 * u, seat, u, { pose: 'stand', t: now / 1000, cut: (seat - car.top - u) / (28 * u) });
+      } else if (!blink && S.lv === 2 && !S.done) {                    // Stockholm: both on one pink Voi
+        const sc = voi(g, px + u, feet, u);
+        Bebs.lonis(g, px - 3 * u, sc.feet, u, { pose: 'stand', t: now / 1000 });
+        Bebs.andrea(g, px + 3 * u, sc.feet, u, { pose: 'stand', t: now / 1000 });
       } else if (!blink) {
         const air = !S.onGround, ph = S.scroll * 0.22;
         const pose = S.done ? 'hold' : air ? 'jump' : 'run';
