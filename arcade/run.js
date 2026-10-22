@@ -209,16 +209,12 @@
     }
   }
 
-  // Stockholm: the two of them on one pink Voi, Lonis driving, Andrea behind him; VOI on its deck
+  // Stockholm: the two of them on one pink Voi, Lonis driving, Andrea behind him
   function voi(g, cx, gy, u) {
     const pink = [246, 112, 150], dark = [40, 34, 48], r = Math.max(2, Math.round(1.7 * u));
-    const x0 = Math.round(cx - 10 * u), x1 = Math.round(cx + 9 * u), deckY = gy - 2 * r - 5;
-    g.fillStyle = rgb(pink); g.fillRect(x0, deckY - 1, x1 - x0, 7);                       // the deck, with VOI on its side
-    g.fillStyle = rgb(dark); g.fillRect(x0 + 1, deckY + 6, x1 - x0 - 2, 1);
-    const VOI = ['#.#.###.###', '#.#.#.#..#.', '#.#.#.#..#.', '#.#.#.#..#.', '.#..###.###'];
-    const lx = Math.round((x0 + x1) / 2 - 5);
-    g.fillStyle = rgb([255, 255, 255]);
-    VOI.forEach((row, j) => { for (let k = 0; k < row.length; k++) if (row[k] === '#') g.fillRect(lx + k, deckY + j, 1, 1); });
+    const x0 = Math.round(cx - 10 * u), x1 = Math.round(cx + 9 * u), deckY = gy - 2 * r;
+    g.fillStyle = rgb(pink); g.fillRect(x0, deckY - 1, x1 - x0, 2);                       // the deck
+    g.fillStyle = rgb(dark); g.fillRect(x0 + 1, deckY + 1, x1 - x0 - 2, 1);
     g.fillStyle = rgb(pink);
     for (let i = 0; i < 15 * u; i++) g.fillRect(Math.round(x1 - 1 + i * 0.12), Math.round(deckY - 1 - i), 2, 1);   // the stem
     const topX = Math.round(x1 + 15 * u * 0.12), topY = Math.round(deckY - 1 - 15 * u);
