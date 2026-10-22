@@ -108,6 +108,24 @@ body{
   border-bottom: 1px solid transparent;
 }
 .lang button:hover{ color: var(--ink); }
+/* under the languages: the way into the arcade, a word pill like theirs */
+.corner{ flex-wrap: wrap; }
+.corner-br{ flex-basis: 100%; height: 0; }
+.arcade-pill{
+  padding: 8px 13px 7px;
+  font-family: var(--font); font-size: 12px; letter-spacing: .10em; text-transform: uppercase;
+  color: var(--ink); text-decoration: none;
+  background: rgba(var(--chip-rgb),.62);
+  border: 1px solid rgba(var(--line-rgb),.3); border-radius: 999px;
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  transition: background .2s, border-color .2s;
+}
+.arcade-pill:hover{ background: rgba(var(--hover-rgb),.8); border-color: var(--accent); }
+.arcade-pill:focus-visible{ outline: 1px solid var(--accent); outline-offset: 2px; }
+/* it lights up once someone has found all 15 photos */
+.arcade-pill.is-lit{ border-color: var(--accent); box-shadow: 0 0 0 2px rgba(var(--accent-rgb),.25), 0 0 16px rgba(var(--accent-rgb),.7); animation: arcade-glow 2.4s ease-in-out infinite; }
+@keyframes arcade-glow{ 50%{ box-shadow: 0 0 0 3px rgba(var(--accent-rgb),.35), 0 0 26px rgba(var(--accent-rgb),.95); } }
+@media (prefers-reduced-motion: reduce){ .arcade-pill.is-lit{ animation: none; } }
 .lang button[aria-pressed="true"]{ color: var(--ink); border-bottom-color: var(--accent); }
 .lang button:focus-visible{ outline: 1px solid var(--accent); outline-offset: 2px; }
 
@@ -1287,11 +1305,7 @@ html:has(.lightbox[open]) :is(main, .corner, .music, .side-stack), html:has(.gal
 .side-btn:hover{ background: rgba(var(--hover-rgb),.8); border-color: var(--accent); }
 .side-btn:focus-visible{ outline: 1px solid var(--accent); outline-offset: 2px; }
 .side-btn[hidden]{ display: none; }
-a.side-btn{ text-decoration: none; }
-/* the arcade lights up once someone has found all 15 photos */
-.arcade-btn.is-lit{ border-color: var(--accent); box-shadow: 0 0 0 2px rgba(var(--accent-rgb),.25), 0 0 16px rgba(var(--accent-rgb),.7); animation: arcade-glow 2.4s ease-in-out infinite; }
-@keyframes arcade-glow{ 50%{ box-shadow: 0 0 0 3px rgba(var(--accent-rgb),.35), 0 0 26px rgba(var(--accent-rgb),.95); } }
-@media (prefers-reduced-motion: reduce){ .arcade-btn.is-lit{ animation: none; } }
+
 
 
 /* ---------- our photos (gallery.js) ----------
