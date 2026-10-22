@@ -320,7 +320,11 @@
       const w = api.st.w, h = api.st.h, gy = Math.round(h * 0.8), u = h / 112;
       S.t += dt;
       const lv = Math.min(2, Math.floor(S.t / LEVEL_T));
-      if (lv !== S.lv) { S.lv = lv; S.fade = 1; api.toast('Next stop: ' + LEVELS[lv].name, w * 0.5, h * 0.3, 'big warm'); stripAll(api); }
+      if (lv !== S.lv) {
+        S.lv = lv; S.fade = 1; api.toast('Next stop: ' + LEVELS[lv].name, w * 0.5, h * 0.3, 'big warm'); stripAll(api);
+        const ride = ['', 'Matte black Tesla Roadster unlocked', 'Pink Voi unlocked'][lv];   // the surprise
+        if (ride) setTimeout(() => { if (S && S.lv === lv && api.running) api.toast('🔓 ' + ride, w * 0.5, h * 0.42, 'big unlock'); }, 1100);
+      }
       S.fade = Math.max(0, S.fade - dt * 0.8);
       const speed = (S.done ? 0 : LEVELS[S.lv].speed + (S.t % LEVEL_T) * 0.25) * Math.max(1, w / 72);
       S.scroll += speed * dt;

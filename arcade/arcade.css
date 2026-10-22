@@ -383,3 +383,6 @@ button:focus-visible, a:focus-visible{ outline: 2px solid var(--accent); outline
 .hs-row input:focus{ outline: 2px solid var(--accent); outline-offset: 1px; }
 .hs-row .btn{ padding: 9px 16px; }
 .hs-msg{ min-height: 1.2em; margin: 5px 0 0 !important; font-size: 12px !important; color: var(--ink-dim) !important; }
+
+/* a ride unlocked in Island to Sweden: may need two lines on a phone */
+.toast.unlock{ white-space: normal; width: max-content; max-width: min(82vw, 420px); text-align: center; }
