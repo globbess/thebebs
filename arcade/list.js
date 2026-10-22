@@ -72,9 +72,9 @@
   }
 
   function drawItem(g, it, t) {
-    // twice the size, with a dark line round them (like Island to Sweden), so they read at a glance
-    if (it.kind === 'flag') D.spriteBig(g, ICONS[(Math.floor(t / 180) + (it.seed * 4 | 0)) % 2 ? 'flag0' : 'flag1'], it.x - 7, it.y - 7, iconMap('flag'));
-    else D.spriteBig(g, ICONS[it.k], it.x - 7, it.y - 7, iconMap(it.k));
+    // their own size, with a dark line round them (like Island to Sweden), so they read at a glance
+    if (it.kind === 'flag') D.spriteBig(g, ICONS[(Math.floor(t / 180) + (it.seed * 4 | 0)) % 2 ? 'flag0' : 'flag1'], it.x - 3, it.y - 3, iconMap('flag'), false, 1);
+    else D.spriteBig(g, ICONS[it.k], it.x - 3, it.y - 3, iconMap(it.k), false, 1);
   }
 
   function renderStrip(api) {
@@ -100,9 +100,9 @@
 
     thumb(g, w, h, t) {
       scene(g, w, h, t);
-      D.spriteBig(g, ICONS.kind, w * 0.5, h * 0.14, iconMap('kind'));
-      D.spriteBig(g, ICONS.flag0, w * 0.2, h * 0.3, iconMap('flag'));
-      D.spriteBig(g, ICONS.curls, w * 0.74, h * 0.4, iconMap('curls'));
+      D.spriteBig(g, ICONS.kind, w * 0.55, h * 0.2, iconMap('kind'), false, 1);
+      D.spriteBig(g, ICONS.flag0, w * 0.28, h * 0.36, iconMap('flag'), false, 1);
+      D.spriteBig(g, ICONS.curls, w * 0.75, h * 0.46, iconMap('curls'), false, 1);
       Bebs.andrea(g, w * 0.58, h - 2, h / 40, { pose: 'up', t: 1, face: 'smile' });
     },
 
@@ -142,15 +142,15 @@
           let it;
           if (flag) it = { kind: 'flag', label: FLAGS[S.flagN++ % FLAGS.length] };
           else { const pool = Math.random() < 0.75 && missing.length ? missing : TRAITS; const tr = pool[(Math.random() * pool.length) | 0]; it = { kind: 'trait', k: tr.k, label: tr.label }; }
-          it.x = 8 + Math.random() * (w - 16); it.y = -8; it.vy = (h * 0.16) * (1 + pace * 0.9) * (0.85 + Math.random() * 0.3); it.seed = Math.random();
-          if (flag && Math.random() < 0.35) it.x = D.clamp(S.x + (Math.random() - 0.5) * 14, 8, w - 8);   // some aim for her
+          it.x = 5 + Math.random() * (w - 10); it.y = -5; it.vy = (h * 0.16) * (1 + pace * 0.9) * (0.85 + Math.random() * 0.3); it.seed = Math.random();
+          if (flag && Math.random() < 0.35) it.x = D.clamp(S.x + (Math.random() - 0.5) * 14, 5, w - 5);   // some aim for her
           S.items.push(it);
         }
       }
       for (const it of S.items) {
         it.y += it.vy * dt;
         if (it.gone) continue;
-        if (Math.abs(it.x - S.x) < 9 && it.y > hands - 7 && it.y < hands + 9) {
+        if (Math.abs(it.x - S.x) < 7 && it.y > hands - 5 && it.y < hands + 8) {
           it.gone = true;
           if (it.kind === 'flag') {
             if (S.t - S.hit < 0.8 || S.won) continue;
