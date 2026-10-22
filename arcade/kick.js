@@ -24,7 +24,12 @@
       g.fillStyle = rgb(D.day ? [90, 170, 90] : [90, 190, 80]);
       for (let k = 0; k < 8; k++) g.fillRect((x - 2 + hash(i + k * 9) * 5) | 0, (hz - hh - 1 + hash(i * 5 + k) * hh * 0.5) | 0, 1, 1);
     }
-    for (let y = hz + 1; y < h; y++) {
+    // the pitch starts a little way in front of the lake, so there's water behind the goal (like the
+    // pitch on Roatán), with a line of foam where it meets the grass
+    const top = Math.round(hz + (G.gl - hz) * 0.82);
+    g.fillStyle = rgba([255, 252, 248], 0.85);
+    for (let x = 0; x < w; x++) if (Math.sin(x * 0.45 + t * 0.002) > 0.15) g.fillRect(x, top - 1, 1, 1);
+    for (let y = top; y < h; y++) {
       const k = (y - hz) / (h - hz);
       const stripe = Math.floor(Math.pow(k, 0.7) * 9) % 2;
       // a fresh green, the stripes clearly mown (crisp: less fading into the distance)
