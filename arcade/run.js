@@ -75,12 +75,42 @@
         g.fillStyle = rgba([220, 210, 228], 0.55); g.fillRect(x | 0, y, 2, 1);
       }
     } else {                                 // Rösås: the Swedish countryside, little red houses and birches
-      for (let i = 0; i < 4; i++) {          // far away, across the lake
-        const x = ((i * 61 + 20 - scroll * 0.15) % (w + 60) + w + 60) % (w + 60) - 30;
-        cottage(g, x, hz + 3, h * 0.045);
+      // meadow instead of the lake, all the way back to the mountains, with a pond here and there,
+      // trees dotted about and wildflowers in the grass
+      D.grad(g, 0, hz, w, gy, D.day ? [[132, 196, 110], [100, 180, 92]] : [[84, 156, 86], [96, 178, 84]]);
+      g.fillStyle = rgb(D.day ? [150, 210, 120] : [120, 190, 100]); g.fillRect(0, hz, w, 1);   // the far edge of the fields, catching the light
+      const span = w + 90;
+      for (let i = 0; i < 3; i++) {          // ponds, far ones small, near ones bigger
+        const depth = 0.25 + i * 0.3, x = ((i * 97 + 30 - scroll * (0.15 + depth * 0.5)) % span + span) % span - 45;
+        const y = hz + (gy - hz) * depth, rw = 6 + depth * 18, rh = 1.5 + depth * 3.2;
+        g.fillStyle = rgb(D.day ? [70, 130, 190] : [64, 92, 170]);
+        g.beginPath(); g.ellipse(x, y, rw, rh, 0, 0, D.TAU); g.fill();
+        g.fillStyle = rgb(D.day ? [170, 210, 240] : [150, 170, 236]);   // the sky in it
+        g.fillRect(Math.round(x - rw * 0.4), Math.round(y - rh * 0.3), Math.max(1, Math.round(rw * 0.5)), 1);
+        g.fillStyle = rgb([255, 252, 240]); g.fillRect(Math.round(x + rw * 0.3), Math.round(y), 1, 1);
       }
-      for (let i = 0; i < 9; i++) {
-        const x = ((i * 23 - scroll * 0.6) % (w + 30) + w + 30) % (w + 30) - 15;
+      for (let i = 0; i < 7; i++) {          // trees out in the fields: round ones and spruces
+        const depth = 0.1 + hash(i * 4.1) * 0.5, x = ((i * 41 + 12 - scroll * (0.12 + depth * 0.4)) % span + span) % span - 45;
+        const base = hz + (gy - hz) * depth, th = h * (0.04 + depth * 0.09);
+        if (i % 3 === 0) {
+          for (let k = 0; k < th; k++) { const half = Math.max(1, Math.round((k / th) * th * 0.32)); g.fillStyle = rgb(D.day ? [34, 104, 64] : [30, 92, 58]); g.fillRect(Math.round(x) - half, Math.round(base - th + k), half * 2, 1); }
+        } else {
+          g.fillStyle = rgb([90, 66, 50]); g.fillRect(Math.round(x), Math.round(base - th * 0.4), 1, Math.round(th * 0.4));
+          g.fillStyle = rgb(D.day ? [52, 128, 66] : [46, 120, 60]);
+          g.beginPath(); g.arc(x, base - th * 0.62, th * 0.34, 0, D.TAU); g.fill();
+        }
+      }
+      const fc = [[255, 214, 90], [255, 255, 255], [240, 120, 170], [170, 130, 240], [250, 160, 80]];
+      for (let i = 0; i < 70; i++) {         // wildflowers, thicker towards you
+        const depth = Math.pow(hash(i * 2.3 + 1), 0.6), x = ((hash(i * 5.7) * span - scroll * (0.15 + depth * 0.6)) % span + span) % span - 45;
+        g.fillStyle = rgb(fc[i % fc.length]); g.fillRect(Math.round(x), Math.round(hz + 1 + (gy - hz - 2) * depth), 1, 1);
+      }
+      for (let i = 0; i < 6; i++) {          // little red houses scattered over the fields, small far off
+        const depth = [0.04, 0.12, 0.22, 0.08, 0.35, 0.18][i], x = ((i * 53 + 20 - scroll * (0.12 + depth * 0.5)) % span + span) % span - 45;
+        cottage(g, x, hz + 2 + (gy - hz) * depth, h * (0.035 + depth * 0.09));
+      }
+      for (let i = 0; i < 6; i++) {          // birches along the path
+        const x = ((i * 31 - scroll * 0.6) % (w + 30) + w + 30) % (w + 30) - 15;
         birch(g, x, gy, h * (0.2 + hash(i) * 0.1));
       }
       for (let i = 0; i < 2; i++) {          // and close by, along the path
