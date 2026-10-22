@@ -211,7 +211,7 @@
 
   // Rösås: a red tractor, chugging. A big back wheel and a little front one (yellow hubs), the bonnet
   // and its grille, a tall exhaust puffing, a roll bar over the seat. Lonis drives; Andrea rides on the
-  // step at the back, holding on.
+  // little trailer behind.
   function tractor(g, cx, gy, u, now) {
     const red = [220, 50, 42], red2 = [168, 34, 32], dark = [24, 20, 28], hub = [240, 196, 70];
     const bob = Math.floor(now / 170) % 2, by = gy - bob, x0 = cx - 15 * u;
@@ -233,13 +233,17 @@
         g.fillStyle = rgb(d < rr * rr * 0.22 + 0.5 ? hub : dark); g.fillRect(X + xx, Y + yy, 1, 1);
       }
     };
-    wheel(7, -6.5, 6.5); wheel(25, -3.2, 3.2);
+    // and hitched behind, a short little trailer: a metal plank on one small wheel, for a passenger
+    R(-10, -4.4, 10, 1.3, [176, 174, 188]); R(-10, -4.4, 10, 0.4, [214, 212, 226]);
+    R(-10, -6.4, 0.8, 2.2, [176, 174, 188]);                         // its little back rail
+    R(-0.5, -4, 2.5, 0.8, dark);                                     // the hitch
+    wheel(7, -6.5, 6.5); wheel(25, -3.2, 3.2); wheel(-5, -1.8, 1.8);
     for (let i = 0; i < 4; i++) {                                    // puffs from the stack
       const k = (now * 0.0012 + i / 4) % 1;
       g.fillStyle = rgba([214, 210, 224], 0.65 * (1 - k));
       g.fillRect(Math.round(x0 + (22.5 - k * 6) * u), Math.round(by - (18 + k * 9) * u), 2, 2);
     }
-    return { seat: by - 14 * u, x: x => x0 + x * u, by };
+    return { seat: by - 14 * u, plank: by - 4.4 * u, x: x => x0 + x * u, by };
   }
 
   // Stockholm: the two of them on one pink Voi, Lonis driving, Andrea behind him
@@ -447,8 +451,8 @@
         Bebs.andrea(g, px - 3.5 * u, sc.feet, u, { pose: 'stand', t: now / 1000 });   // holding on behind him
         Bebs.lonis(g, px + 2.5 * u, sc.feet, u, { pose: 'stand', t: now / 1000 });    // Lonis drives
       } else if (!blink && S.t >= LEVEL_T * 3 && !S.done) {             // Rösås: the red tractor, Lonis driving
-        const tr = tractor(g, px + 13 * u, feet, u, now);
-        Bebs.andrea(g, tr.x(-1), tr.by - 2 * u, u, { pose: 'stand', t: now / 1000 });                       // on the back step
+        const tr = tractor(g, px + 17 * u, feet, u, now);
+        Bebs.andrea(g, tr.x(-5), tr.plank, u, { pose: 'stand', t: now / 1000 });                            // on the little trailer
         const hip = tr.seat + 14 * u;                                                                         // sitting: from the waist up
         Bebs.lonis(g, tr.x(8), hip, u, { pose: 'stand', t: now / 1000, cut: (hip - tr.seat) / (28 * u) });
       } else if (!blink) {
