@@ -27,34 +27,42 @@
     for (let y = hz + 1; y < h; y++) {
       const k = (y - hz) / (h - hz);
       const stripe = Math.floor(Math.pow(k, 0.7) * 9) % 2;
-      const base = D.day ? (stripe ? [110, 196, 110] : [92, 176, 96]) : (stripe ? [84, 180, 70] : [62, 150, 60]);
-      g.fillStyle = rgb(D.mix(base, D.day ? [60, 130, 80] : [30, 90, 50], k * 0.4));
+      // a fresh green, the stripes clearly mown (crisp: less fading into the distance)
+      const base = D.day ? (stripe ? [116, 206, 96] : [80, 170, 76]) : (stripe ? [102, 202, 78] : [58, 150, 56]);
+      g.fillStyle = rgb(D.mix(base, D.day ? [60, 130, 80] : [30, 90, 50], k * 0.18));
       g.fillRect(0, y, w, 1);
     }
     // the six-yard line and the spot, softly
-    g.fillStyle = rgba([255, 255, 255], 0.55);
+    g.fillStyle = rgb([250, 250, 255]);
     g.fillRect(G.gx0 - 3, G.gl + Math.round(h * 0.05), G.gw + 7, 1);
     g.fillStyle = rgba([255, 255, 255], 0.9);
     g.fillRect(Math.round(G.bx) - 1, G.by + 3, 2, 1);
   }
 
   function goalNet(g, G, t, bulge) {
-    const net = D.light ? [120, 110, 140] : [200, 196, 230];
+    const net = D.light ? [236, 234, 246] : [226, 224, 244];
     for (let y = G.gl - G.gh + 1; y < G.gl; y++) {
       for (let x = G.gx0 + 1; x < G.gx1; x++) {
         let dx = 0, dy = 0;
         if (bulge) { const d = Math.hypot(x - bulge.x, y - bulge.y); if (d < 6) { const k = (1 - d / 6) * bulge.k; dx = (x - bulge.x) * k * 0.3; dy = (y - bulge.y) * k * 0.3; } }
-        if (((x + dx) | 0) % 3 === 0 || ((y + dy) | 0) % 3 === 0) { g.fillStyle = rgba(net, 0.55); g.fillRect(x, y, 1, 1); }
+        if (((x + dx) | 0) % 3 === 0 || ((y + dy) | 0) % 3 === 0) { g.fillStyle = rgba(net, 0.8); g.fillRect(x, y, 1, 1); }
       }
     }
   }
   function goalFrame(g, G) {
+    // white posts and bar, two dots thick, with a dark line round them so they stand out
+    g.fillStyle = rgb(D.EDGE);
+    g.fillRect(G.gx0 - 2, G.gl - G.gh - 2, 4, G.gh + 3);
+    g.fillRect(G.gx1 - 1, G.gl - G.gh - 2, 4, G.gh + 3);
+    g.fillRect(G.gx0 - 2, G.gl - G.gh - 2, G.gw + 5, 4);
     g.fillStyle = rgb([255, 255, 255]);
-    g.fillRect(G.gx0, G.gl - G.gh, 1, G.gh + 1);
-    g.fillRect(G.gx1, G.gl - G.gh, 1, G.gh + 1);
-    g.fillRect(G.gx0, G.gl - G.gh, G.gw + 1, 1);
+    g.fillRect(G.gx0 - 1, G.gl - G.gh - 1, 2, G.gh + 1);
+    g.fillRect(G.gx1, G.gl - G.gh - 1, 2, G.gh + 1);
+    g.fillRect(G.gx0 - 1, G.gl - G.gh - 1, G.gw + 3, 2);
   }
   function ball(g, x, y, r, spin) {
+    g.fillStyle = rgb(D.EDGE);
+    g.beginPath(); g.arc(x, y, r + 1, 0, D.TAU); g.fill();
     g.fillStyle = rgb([252, 252, 255]);
     g.beginPath(); g.arc(x, y, r, 0, D.TAU); g.fill();
     g.fillStyle = rgb([30, 24, 40]);
