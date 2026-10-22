@@ -82,7 +82,6 @@
         const x = ((i * 23 - scroll * 0.6) % (w + 30) + w + 30) % (w + 30) - 15;
         birch(g, x, gy, h * (0.2 + hash(i) * 0.1));
       }
-      { const x = ((w * 0.7 - scroll * 0.3) % (w + 40) + w + 40) % (w + 40) - 20; tractor(g, x, hz + Math.round((gy - hz) * 0.35), h * 0.05, t); }   // a red tractor in the field
       for (let i = 0; i < 2; i++) {          // and close by, along the path
         const x = ((i * 120 + 50 - scroll * 0.8) % (w + 120) + w + 120) % (w + 120) - 60;
         cottage(g, x, gy - 2, h * 0.1);
@@ -210,43 +209,37 @@
     }
   }
 
-  // Rösås: the really old grey stick-shift Toyota (Andrea learned to drive stick in it): a boxy sedan,
-  // a rust spot, a chrome bumper; every few seconds it lurches (first gear) and puffs out the back.
-  // The two of them show through its windows, from the shoulders up (Bebs o.cut).
-  function toyota(g, cx, gy, u, now) {
-    const grey = [156, 158, 166], trim = [134, 136, 148], chrome = [206, 206, 216];
-    const L = Math.round(38 * u), x0 = Math.round(cx - L / 2), r = Math.max(2, Math.round(2.8 * u));
-    const ph = (now % 2600) / 2600, lurch = ph < 0.12 ? Math.sin(ph / 0.12 * Math.PI) : 0;
-    const by = gy - Math.round(lurch * 2 * u), dx = -Math.round(lurch * u);
-    const belt = by - r - 7 * u, roof = by - r - 18 * u;
-    const X = x => Math.round(x0 + dx + x * u);
-    g.fillStyle = rgb(grey);
-    g.fillRect(X(0), Math.round(by - r - 5 * u), L, Math.round(5 * u + r * 0.5));                  // the boot, the doors, the bonnet
-    g.fillRect(X(8), Math.round(belt), Math.round(24 * u), Math.round(2 * u + 1));
-    g.fillStyle = rgb(trim);
-    g.fillRect(X(9), Math.round(roof), Math.round(21 * u), Math.max(2, Math.round(1.4 * u)));      // the roof
-    [9, 19.5, 29.5].forEach(px => g.fillRect(X(px), Math.round(roof), Math.max(2, Math.round(1.2 * u)), Math.round(belt - roof)));   // pillars
-    g.fillRect(X(0), Math.round(by - r - 5 * u), L, 1);
-    g.fillStyle = rgb(chrome);
-    g.fillRect(X(-1), Math.round(by - r - 1), Math.round(3 * u), 2); g.fillRect(X(36), Math.round(by - r - 1), Math.round(3 * u), 2);   // bumpers
-    g.fillStyle = rgb([255, 236, 170]); g.fillRect(X(37), Math.round(by - r - 4 * u), 1, 2);     // headlight
-    g.fillStyle = rgb([220, 60, 50]); g.fillRect(X(0), Math.round(by - r - 4 * u), 1, 2);       // tail light
-    g.fillStyle = rgb([158, 92, 62]); g.fillRect(X(4), Math.round(by - r - 2 * u), 2, 1); g.fillRect(X(5), Math.round(by - r - 2 * u) + 1, 1, 1);   // rust
-    [7, 30].forEach(wx => {                                                                         // wheels, grey hubcaps
-      const x = X(wx);
-      for (let yy = -r; yy <= r; yy++) for (let xx = -r; xx <= r; xx++) {
+  // Rösås: a red tractor, chugging. A big back wheel and a little front one (yellow hubs), the bonnet
+  // and its grille, a tall exhaust puffing, a roll bar over the seat. Andrea drives; Lonis rides on the
+  // step at the back, holding on.
+  function tractor(g, cx, gy, u, now) {
+    const red = [220, 50, 42], red2 = [168, 34, 32], dark = [24, 20, 28], hub = [240, 196, 70];
+    const bob = Math.floor(now / 170) % 2, by = gy - bob, x0 = cx - 15 * u;
+    const R = (x, y, w, h, c) => { g.fillStyle = rgb(c); g.fillRect(Math.round(x0 + x * u), Math.round(by + y * u), Math.max(1, Math.round(w * u)), Math.max(1, Math.round(h * u))); };
+    R(10, -10, 20, 6, red);                                         // the bonnet
+    R(28.5, -10, 1.5, 6, red2);                                     // its grille
+    R(10, -10, 20, 0.7, [246, 120, 100]);                           // a shine along the top
+    R(9, -13, 4, 9, red);                                           // under the seat
+    R(1, -14.5, 13, 2, red);                                        // the fender over the big wheel
+    R(6, -16, 4, 1.5, dark);                                        // the seat
+    const bar = [118, 112, 132];
+    R(2, -31, 1.2, 17, bar); R(12, -31, 1.2, 17, bar); R(2, -31, 11.2, 1.2, bar);   // the roll bar
+    R(22, -17, 1.2, 7, dark);                                       // the exhaust stack
+    const wheel = (wx, wy, r) => {
+      const X = Math.round(x0 + wx * u), Y = Math.round(by + wy * u), rr = Math.round(r * u);
+      for (let yy = -rr; yy <= rr; yy++) for (let xx = -rr; xx <= rr; xx++) {
         const d = xx * xx + yy * yy;
-        if (d > r * r + 0.5) continue;
-        g.fillStyle = rgb(d < (r * 0.55) * (r * 0.55) + 0.5 ? [176, 176, 186] : [20, 18, 24]);
-        g.fillRect(x + xx, gy - r + yy, 1, 1);
+        if (d > rr * rr + 0.5) continue;
+        g.fillStyle = rgb(d < rr * rr * 0.22 + 0.5 ? hub : dark); g.fillRect(X + xx, Y + yy, 1, 1);
       }
-    });
-    if (ph < 0.35) for (let i = 0; i < 6; i++) {                                                    // a puff from the exhaust
-      const k = ph / 0.35;
-      g.fillStyle = rgba([200, 198, 210], 0.7 * (1 - k));
-      g.fillRect(Math.round(X(-1) - k * 10 * u - i * 1.5), Math.round(by - r - 1 - k * 4 * u - (i % 3)), 2, 2);
+    };
+    wheel(7, -6.5, 6.5); wheel(25, -3.2, 3.2);
+    for (let i = 0; i < 4; i++) {                                    // puffs from the stack
+      const k = (now * 0.0012 + i / 4) % 1;
+      g.fillStyle = rgba([214, 210, 224], 0.65 * (1 - k));
+      g.fillRect(Math.round(x0 + (22.5 - k * 6) * u), Math.round(by - (18 + k * 9) * u), 2, 2);
     }
-    return { belt, roof, by, x: X };
+    return { seat: by - 14 * u, x: x => x0 + x * u, by };
   }
 
   // Stockholm: the two of them on one pink Voi, Lonis driving, Andrea behind him
@@ -269,26 +262,6 @@
       }
     });
     return { feet: deckY - 1 };
-  }
-
-  // a little red tractor chugging along in the field: a big black back wheel, a little front one,
-  // its cab, and puffs from the exhaust
-  function tractor(g, x, gy, s, t) {
-    const red = [222, 52, 44], dark = [26, 22, 30], X = Math.round(x), S = Math.max(4, Math.round(s));
-    const bob = Math.floor(t / 180) % 2;
-    g.fillStyle = rgb(red);
-    g.fillRect(X, gy - Math.round(S * 1.1) - bob, Math.round(S * 1.6), Math.round(S * 0.6));          // the bonnet
-    g.fillRect(X + Math.round(S * 1.1), gy - Math.round(S * 1.9) - bob, Math.round(S * 0.9), Math.round(S * 1.4));   // the cab
-    g.fillStyle = rgb([250, 246, 240]); g.fillRect(X + Math.round(S * 1.25), gy - Math.round(S * 1.75) - bob, Math.max(1, Math.round(S * 0.5)), Math.max(1, Math.round(S * 0.45)));   // its window
-    g.fillStyle = rgb(dark); g.fillRect(X + Math.round(S * 0.3), gy - Math.round(S * 1.6) - bob, 1, Math.round(S * 0.5));   // the exhaust
-    const wheel = (cx, cy, r) => { for (let yy = -r; yy <= r; yy++) for (let xx = -r; xx <= r; xx++) { const d = xx * xx + yy * yy; if (d > r * r + 0.5) continue; g.fillStyle = rgb(d < r * r * 0.2 + 0.5 ? [230, 200, 90] : dark); g.fillRect(cx + xx, cy + yy, 1, 1); } };
-    wheel(X + Math.round(S * 1.5), gy - Math.round(S * 0.55), Math.round(S * 0.55));
-    wheel(X + Math.round(S * 0.25), gy - Math.round(S * 0.3), Math.max(1, Math.round(S * 0.3)));
-    for (let i = 0; i < 3; i++) {
-      const k = ((t * 0.0015 + i / 3) % 1);
-      g.fillStyle = rgba([210, 206, 220], 0.6 * (1 - k));
-      g.fillRect(X + Math.round(S * 0.3 - k * S), gy - Math.round(S * 1.7 + k * S * 1.2) - bob, 2, 1);
-    }
   }
 
   // a little red Swedish house (falu red, white corners and window frames, lit windows, a dark roof)
@@ -404,7 +377,7 @@
         }
       } else if (!S.arrive) {                                          // a little stretch of countryside first
         S.arrive = { x: w + 30 + w * 3 }; api.toast('Next stop: Rösås', w * 0.5, h * 0.3, 'big warm');
-        setTimeout(() => { if (S && S.arrive && !S.done && api.running) api.toast('🔓 Really old grey stick-shift Toyota unlocked', w * 0.5, h * 0.42, 'big unlock'); }, 1100);
+        setTimeout(() => { if (S && S.arrive && !S.done && api.running) api.toast('🔓 Red tractor unlocked', w * 0.5, h * 0.42, 'big unlock'); }, 1100);
       }
 
       const px = Math.round(w * 0.24), feet = gy + S.y;
@@ -473,11 +446,11 @@
         const sc = voi(g, px + u, feet, u);
         Bebs.andrea(g, px - 3.5 * u, sc.feet, u, { pose: 'stand', t: now / 1000 });   // holding on behind him
         Bebs.lonis(g, px + 2.5 * u, sc.feet, u, { pose: 'stand', t: now / 1000 });    // Lonis drives
-      } else if (!blink && S.t >= LEVEL_T * 3 && !S.done) {             // Rösås: the old grey Toyota, Andrea driving
-        const car = toyota(g, px + 8 * u, feet, u, now);                 // (a long car: it sits a little further in)
-        const seat = car.by - 2.8 * u + 11 * u;
-        Bebs.lonis(g, car.x(14.5), seat, u, { pose: 'stand', t: now / 1000, cut: (seat - car.belt) / (28 * u) });
-        Bebs.andrea(g, car.x(24.5), seat, u, { pose: 'stand', t: now / 1000, cut: (seat - car.belt) / (24 * u) });
+      } else if (!blink && S.t >= LEVEL_T * 3 && !S.done) {             // Rösås: the red tractor, Andrea driving
+        const tr = tractor(g, px + 13 * u, feet, u, now);
+        Bebs.lonis(g, tr.x(-1), tr.by - 2 * u, u, { pose: 'stand', t: now / 1000 });                        // on the back step
+        const hip = tr.seat + 12 * u;                                                                         // sitting: from the waist up
+        Bebs.andrea(g, tr.x(8), hip, u, { pose: 'stand', t: now / 1000, cut: (hip - tr.seat) / (24 * u) });
       } else if (!blink) {
         const air = !S.onGround, ph = S.scroll * 0.22;
         const pose = S.done ? 'hold' : air ? 'jump' : 'run';
