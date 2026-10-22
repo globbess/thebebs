@@ -210,7 +210,7 @@
   }
 
   // Rösås: a red tractor, chugging. A big back wheel and a little front one (yellow hubs), the bonnet
-  // and its grille, a tall exhaust puffing, a roll bar over the seat. Andrea drives; Lonis rides on the
+  // and its grille, a tall exhaust puffing, a roll bar over the seat. Lonis drives; Andrea rides on the
   // step at the back, holding on.
   function tractor(g, cx, gy, u, now) {
     const red = [220, 50, 42], red2 = [168, 34, 32], dark = [24, 20, 28], hub = [240, 196, 70];
@@ -377,7 +377,7 @@
         }
       } else if (!S.arrive) {                                          // a little stretch of countryside first
         S.arrive = { x: w + 30 + w * 3 }; api.toast('Next stop: Rösås', w * 0.5, h * 0.3, 'big warm');
-        setTimeout(() => { if (S && S.arrive && !S.done && api.running) api.toast('🔓 Red tractor unlocked', w * 0.5, h * 0.42, 'big unlock'); }, 1100);
+        setTimeout(() => { if (S && S.arrive && !S.done && api.running) api.toast('🔓 Farm tractor unlocked', w * 0.5, h * 0.42, 'big unlock'); }, 1100);
       }
 
       const px = Math.round(w * 0.24), feet = gy + S.y;
@@ -446,11 +446,11 @@
         const sc = voi(g, px + u, feet, u);
         Bebs.andrea(g, px - 3.5 * u, sc.feet, u, { pose: 'stand', t: now / 1000 });   // holding on behind him
         Bebs.lonis(g, px + 2.5 * u, sc.feet, u, { pose: 'stand', t: now / 1000 });    // Lonis drives
-      } else if (!blink && S.t >= LEVEL_T * 3 && !S.done) {             // Rösås: the red tractor, Andrea driving
+      } else if (!blink && S.t >= LEVEL_T * 3 && !S.done) {             // Rösås: the red tractor, Lonis driving
         const tr = tractor(g, px + 13 * u, feet, u, now);
-        Bebs.lonis(g, tr.x(-1), tr.by - 2 * u, u, { pose: 'stand', t: now / 1000 });                        // on the back step
-        const hip = tr.seat + 12 * u;                                                                         // sitting: from the waist up
-        Bebs.andrea(g, tr.x(8), hip, u, { pose: 'stand', t: now / 1000, cut: (hip - tr.seat) / (24 * u) });
+        Bebs.andrea(g, tr.x(-1), tr.by - 2 * u, u, { pose: 'stand', t: now / 1000 });                       // on the back step
+        const hip = tr.seat + 14 * u;                                                                         // sitting: from the waist up
+        Bebs.lonis(g, tr.x(8), hip, u, { pose: 'stand', t: now / 1000, cut: (hip - tr.seat) / (28 * u) });
       } else if (!blink) {
         const air = !S.onGround, ph = S.scroll * 0.22;
         const pose = S.done ? 'hold' : air ? 'jump' : 'run';
