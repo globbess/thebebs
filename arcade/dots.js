@@ -207,6 +207,17 @@
     }
   };
 
+  // the same, drawn sc dots to a pixel with a dark line round it, so it reads crisply over anything
+  D.EDGE = [22, 12, 34];
+  D.spriteBig = function (g, rows, x, y, map, flip, sc) {
+    sc = sc || 2;
+    const w = rows[0].length, X = Math.round(x), Y = Math.round(y);
+    const at = (j, k) => map[rows[j][flip ? w - 1 - k : k]];
+    g.fillStyle = rgb(D.EDGE);
+    for (let j = 0; j < rows.length; j++) for (let k = 0; k < w; k++) if (at(j, k)) g.fillRect(X + k * sc - 1, Y + j * sc - 1, sc + 2, sc + 2);
+    for (let j = 0; j < rows.length; j++) for (let k = 0; k < w; k++) { const c = at(j, k); if (c) { g.fillStyle = typeof c === 'string' ? c : rgb(c); g.fillRect(X + k * sc, Y + j * sc, sc, sc); } }
+  };
+
   D.stars = function (g, w, h, time, a, seed) {
     if (a <= 0) return;
     for (let i = 0; i < 40; i++) {

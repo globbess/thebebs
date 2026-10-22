@@ -72,8 +72,9 @@
   }
 
   function drawItem(g, it, t) {
-    if (it.kind === 'flag') D.sprite(g, ICONS[(Math.floor(t / 180) + (it.seed * 4 | 0)) % 2 ? 'flag0' : 'flag1'], it.x - 3, it.y - 3, iconMap('flag'));
-    else D.sprite(g, ICONS[it.k], it.x - 3, it.y - 3, iconMap(it.k));
+    // twice the size, with a dark line round them (like Island to Sweden), so they read at a glance
+    if (it.kind === 'flag') D.spriteBig(g, ICONS[(Math.floor(t / 180) + (it.seed * 4 | 0)) % 2 ? 'flag0' : 'flag1'], it.x - 7, it.y - 7, iconMap('flag'));
+    else D.spriteBig(g, ICONS[it.k], it.x - 7, it.y - 7, iconMap(it.k));
   }
 
   function renderStrip(api) {
@@ -99,9 +100,9 @@
 
     thumb(g, w, h, t) {
       scene(g, w, h, t);
-      D.sprite(g, ICONS.kind, w * 0.55, h * 0.2, iconMap('kind'));
-      D.sprite(g, ICONS.flag0, w * 0.28, h * 0.36, iconMap('flag'));
-      D.sprite(g, ICONS.curls, w * 0.75, h * 0.46, iconMap('curls'));
+      D.spriteBig(g, ICONS.kind, w * 0.5, h * 0.14, iconMap('kind'));
+      D.spriteBig(g, ICONS.flag0, w * 0.2, h * 0.3, iconMap('flag'));
+      D.spriteBig(g, ICONS.curls, w * 0.74, h * 0.4, iconMap('curls'));
       Bebs.andrea(g, w * 0.58, h - 2, h / 40, { pose: 'up', t: 1, face: 'smile' });
     },
 
@@ -141,15 +142,15 @@
           let it;
           if (flag) it = { kind: 'flag', label: FLAGS[S.flagN++ % FLAGS.length] };
           else { const pool = Math.random() < 0.75 && missing.length ? missing : TRAITS; const tr = pool[(Math.random() * pool.length) | 0]; it = { kind: 'trait', k: tr.k, label: tr.label }; }
-          it.x = 4 + Math.random() * (w - 8); it.y = -4; it.vy = (h * 0.16) * (1 + pace * 0.9) * (0.85 + Math.random() * 0.3); it.seed = Math.random();
-          if (flag && Math.random() < 0.35) it.x = D.clamp(S.x + (Math.random() - 0.5) * 14, 4, w - 4);   // some aim for her
+          it.x = 8 + Math.random() * (w - 16); it.y = -8; it.vy = (h * 0.16) * (1 + pace * 0.9) * (0.85 + Math.random() * 0.3); it.seed = Math.random();
+          if (flag && Math.random() < 0.35) it.x = D.clamp(S.x + (Math.random() - 0.5) * 14, 8, w - 8);   // some aim for her
           S.items.push(it);
         }
       }
       for (const it of S.items) {
         it.y += it.vy * dt;
         if (it.gone) continue;
-        if (Math.abs(it.x - S.x) < 6 && it.y > hands - 4 && it.y < hands + 7) {
+        if (Math.abs(it.x - S.x) < 9 && it.y > hands - 7 && it.y < hands + 9) {
           it.gone = true;
           if (it.kind === 'flag') {
             if (S.t - S.hit < 0.8 || S.won) continue;
@@ -169,7 +170,7 @@
           }
         }
       }
-      S.items = S.items.filter(it => !it.gone && it.y < h + 8);
+      S.items = S.items.filter(it => !it.gone && it.y < h + 16);
       if (S.lonis) {
         const L = S.lonis;
         if (!L.landed) { L.vy += 160 * dt; L.y += L.vy * dt; if (L.y >= feet) { L.y = feet; L.landed = S.t; api.buzz(30); api.toast('every box checked', S.x, h * 0.45, 'big'); } }

@@ -48,27 +48,35 @@
     g.beginPath(); g.ellipse(x + w / 2, base + 1, w * 0.9, 2.2, 0, 0, D.TAU); g.fill();
     g.fillStyle = rgb([90, 60, 40]);
     g.fillRect(Math.round(x + w / 2) - 1, Math.round(base - 3), 2, 3);
+    const half = y => Math.max(1, Math.round((0.35 + 0.65 * (((y - top) % 7) / 7)) * w / 2));
+    g.fillStyle = rgb(D.EDGE);                                         // a dark line round it first (crisp, like Island to Sweden)
+    for (let y = Math.round(top) - 1; y < base - 1; y++) { const hh = half(Math.max(Math.round(top), y)); g.fillRect(Math.round(x + w / 2) - hh - 1, y, hh * 2 + 2, 1); }
     for (let y = Math.round(top); y < base - 2; y++) {
-      const k = ((y - top) % 7) / 7, half = Math.max(1, Math.round((0.35 + 0.65 * k) * w / 2));
+      const k = ((y - top) % 7) / 7;
       g.fillStyle = rgb(k < 0.3 ? lt : dk);
-      g.fillRect(Math.round(x + w / 2) - half, y, half * 2, 1);
+      g.fillRect(Math.round(x + w / 2) - half(y), y, half(y) * 2, 1);
     }
   }
   function cloudCol(g, x, bottom, w, m, t) {
     const s = skyAt(m), lit = mix(D.light ? [255, 240, 248] : [255, 196, 214], s.bot, 0.2), sh = mix(lit, s.top, 0.3);
     // a stack of puffs hanging from the top, brightest at the bottom where the sun lights them
-    for (let y = bottom - 3, i = 0; y > -6; y -= 5, i++) {
-      const k = Math.min(1, (bottom - y) / 30);
-      g.fillStyle = rgb(mix(lit, sh, k));
-      g.beginPath();
-      g.ellipse(x + w * 0.5 + Math.sin(i * 1.7) * 1.5, y, w * 0.62, 3.2, 0, 0, D.TAU);
-      g.ellipse(x + w * 0.5 + Math.cos(i * 2.3) * 2.2, y - 2.5, w * 0.45, 2.6, 0, 0, D.TAU);
-      g.fill();
-    }
+    const puffs = (grow, col) => {
+      for (let y = bottom - 3, i = 0; y > -6; y -= 5, i++) {
+        g.fillStyle = col || rgb(mix(lit, sh, Math.min(1, (bottom - y) / 30)));
+        g.beginPath();
+        g.ellipse(x + w * 0.5 + Math.sin(i * 1.7) * 1.5, y, w * 0.62 + grow, 3.2 + grow, 0, 0, D.TAU);
+        g.ellipse(x + w * 0.5 + Math.cos(i * 2.3) * 2.2, y - 2.5, w * 0.45 + grow, 2.6 + grow, 0, 0, D.TAU);
+        g.fill();
+      }
+    };
+    puffs(1, rgb(D.EDGE));                                                 // the dark line round the column
+    puffs(0);
     g.fillStyle = rgb(mix(lit, [255, 255, 255], 0.4));
     g.fillRect(Math.round(x + 1), Math.round(bottom - 2), Math.max(1, Math.round(w - 2)), 1);
   }
   function sunBall(g, x, y, r, t, m) {
+    g.fillStyle = rgb(D.EDGE);
+    g.beginPath(); g.arc(x, y, r + 2, 0, D.TAU); g.fill();
     g.fillStyle = rgb([255, 196, 90]);
     g.beginPath(); g.arc(x, y, r + 1, 0, D.TAU); g.fill();
     g.fillStyle = rgb(D.light ? [255, 186, 60] : [255, 214, 100]);
