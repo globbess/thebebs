@@ -328,7 +328,7 @@
   }
 
   const game = {
-    id: 'run', name: 'Island to Sweden', kicker: 'Game 3',
+    id: 'run', name: 'Island to Sweden', kicker: 'Game 1',
     blurb: 'Run from Roatán through San Francisco to Rösås.',
     how: 'From the island to the wedding, one stop at a time. Make it through one and the next unlocks. Tap to jump, tap again in the air to jump higher. Collect hearts, dodge everything else. Three lives.',
     better: 'high', disco: false, thumbScene: 0.7,

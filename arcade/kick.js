@@ -114,7 +114,7 @@
   }
 
   const game = {
-    id: 'kick', name: 'Sunday Football', kicker: 'Game 1',
+    id: 'kick', name: 'Sunday Football', kicker: 'Game 2',
     blurb: 'How many can you get past Lonis?',
     how: 'Swipe up from the ball to shoot: sideways for the corners, a longer swipe goes higher. Or tap the spot in the goal you want. Keep scoring until Lonis saves one. He gets quicker with every goal.',
     better: 'high', scene: 0.68, disco: false,           // golden hour over Rösås, the sun up

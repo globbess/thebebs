@@ -189,7 +189,7 @@
     });
     return box;
   }
-  const ORDER = ['kick', 'dress', 'run', 'sun', 'list', 'chess'];
+  const ORDER = ['run', 'kick', 'dress', 'sun', 'list', 'chess'];
   function buildMenu() {
     list.innerHTML = '';
     games.slice().sort((a, b) => ORDER.indexOf(a.id) - ORDER.indexOf(b.id)).forEach(def => {
