@@ -11,7 +11,8 @@
     { name: 'San Francisco', p: 0.7, speed: 46, kinds: ['cone', 'hydrant', 'robotaxi', 'cone'] },
     { name: 'Stockholm', p: 0.94, speed: 52, kinds: ['scooter', 'bike', 'dala', 'scooter'] }
   ];
-  const LEVEL_T = 24;           // seconds per place
+  const LEVEL_T = 20;           // seconds per place
+  const ROSAS_T = 7;            // and the last stretch, through the countryside to the finish
   const GRAV = 470, JUMP = 175, JUMP2 = 150;
   // the things on the road are drawn two dots to a pixel, with a dark line round them, so they read
   const SC = 2, INSET = 2, EDGE = [22, 12, 34];
@@ -380,7 +381,7 @@
           S.next = 52 + Math.random() * 46 + speed * 0.4 + spr.rows[0].length * SC + (k === 'robotaxi' ? 22 : 0);
         }
       } else if (!S.arrive) {                                          // a little stretch of countryside first
-        S.arrive = { x: w + 30 + w * 3 }; api.toast('Welcome to Rösås', w * 0.5, h * 0.3, 'big warm sign', 2800);
+        S.arrive = { x: w + 30 + w * 3, at: S.t + ROSAS_T }; api.toast('Welcome to Rösås', w * 0.5, h * 0.3, 'big warm sign', 2800);
         setTimeout(() => { if (S && S.arrive && !S.done && api.running) api.toast('🔓 Farm tractor unlocked', w * 0.5, h * 0.42, 'big unlock sign', 6000); }, 1100);
       }
 
@@ -407,8 +408,9 @@
       S.pick = S.pick.filter(p => p.x > -8 && !p.got);
 
       if (S.arrive && !S.done) {
-        S.arrive.x -= speed * dt;
-        if (S.arrive.x <= px + 2) {
+        // the arch comes in at the pace of the road, arriving after ROSAS_T seconds
+        S.arrive.x = px + 2 + Math.max(0, S.arrive.at - S.t) * speed;
+        if (S.t >= S.arrive.at) {
           S.done = true; S.arrive.x = px + 2; S.doneAt = S.t;
           stripAll(api);
           api.toast('Rösås!', w * 0.5, h * 0.3, 'big sign');
