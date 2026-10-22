@@ -413,3 +413,16 @@ button:focus-visible, a:focus-visible{ outline: 2px solid var(--accent); outline
 .tv-row{ display: flex; justify-content: center; margin-top: 12px; }
 .tv-score{ margin: 10px 0 0; text-align: center; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-dim); }
 .play .panel:has(.tv){ max-height: 62vh; }   /* the quiz needs a little more room */
+/* Island to Sweden's big messages (welcome, unlocked): set straight, on a soft glow of the panel
+   colour that fades out at its edges, so they read over anything */
+.toast.sign{
+  transform: translate(-50%, -50%);
+  padding: 9px 16px;
+  font-size: 21px; line-height: 1.25;
+  border-radius: 16px;
+  background: rgba(var(--panel-rgb),.86);
+  box-shadow: 0 0 18px 10px rgba(var(--panel-rgb),.86);
+  text-shadow: none;
+}
+.toast.sign.unlock{ color: var(--ink); }
+.toast.sign.small{ padding: 5px 11px; font-size: 15px; box-shadow: 0 0 12px 6px rgba(var(--panel-rgb),.86); }

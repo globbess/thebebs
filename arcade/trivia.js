@@ -57,9 +57,9 @@
     P.innerHTML = '';
     const box = el('div', 'tv');
     if (S.phase === 'start') {
-      box.append(el('p', 'tv-meta', 'Beat Lonis'));
+      box.append(el('p', 'tv-meta', 'Trivia'));
       const h = el('p', 'tv-q'); h.append('Lonis took this quiz and got ', el('b', null, S.his + '/' + N), '. Can you beat him?');
-      box.append(h, el('p', 'tv-small', 'Ten questions on his favourite things: AI, governance, free markets, liberty and animals.'));
+      box.append(h, el('p', 'tv-small', 'Ten questions on his favorite things: AI, governance, free markets, liberty and animals.'));
       const go = el('button', 'btn', 'Start'); go.type = 'button'; go.dataset.act = 'go';
       const row = el('div', 'tv-row'); row.append(go); box.append(row);
     } else {
@@ -125,8 +125,8 @@
   }
 
   const game = {
-    id: 'trivia', name: 'Beat Lonis', kicker: 'Game 4', panel: true,
-    blurb: 'A quiz on his favourite things. Can you beat his score?',
+    id: 'trivia', name: 'Trivia', kicker: 'Game 5', panel: true,
+    blurb: 'Beat Lonis in a quiz on his favorite things.',
     thumbScene: () => (D.light ? 0.985 : 0.93),
     sceneAt: () => (D.light ? 0.985 : 0.93),
     fmt: v => v + '/' + N,
