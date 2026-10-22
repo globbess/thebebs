@@ -91,7 +91,7 @@
   }
 
   const game = {
-    id: 'list', name: 'The List', kicker: 'Game 3',
+    id: 'list', name: 'The List', kicker: 'Game 5',
     blurb: 'Catch every box on her list. Dodge the red flags.',
     how: 'Andrea prayed for her person with a very specific list. Drag to move her. Catch everything on the list and dodge the red flags.',
     better: 'low', scene: 0.64, disco: false,            // the sun going down into the Caribbean

@@ -32,9 +32,14 @@
     bike:     { rows: ['....ss.hh.', '.....#.#..', '...#####..', '.oo#..#oo.', 'o..o##o..o', 'o..o..o..o', '.oo....oo.'], map: { '#': [52, 130, 210], s: [40, 36, 48], h: [40, 36, 48], o: [110, 106, 124] } },
     dala:     { rows: ['..##.....', '.###.....', '####.....', '..##.....', '..#######', '..#y#g#y#', '..#######', '..##...##', '..##...##'], map: { '#': [204, 34, 44], y: [255, 214, 90], g: [90, 170, 90] } }
   };
+  // the Australian shepherd waiting at Rösås: red tri like ours (chocolate, the white blaze, copper cheeks,
+  // pale blue eyes, tongue out), sitting, facing you
+  const DOG = { rows: ['.bb.......bb.', 'bbbb.....bbbb', 'bbbbbbwbbbbbb', '.bbbbbwbbbbb.', '.bebtbwbtbeb.', '.bbbbwwwbbbb.', '..bbwwnwwbb..', '..bwwwpwwwb..', '...wwwpwww...', '..bwwwwwwwb..', '.bbwwwwwwwbb.', '.bbbwwwwwbbb.', '.bbbwwwwwbbb.', '.bb.w...w.bb.', '.bbww...wwbb.'],
+    map: { b: [124, 66, 40], w: [250, 246, 240], t: [214, 146, 84], e: [160, 214, 244], n: [56, 34, 30], p: [242, 128, 150] } };
   const FACING = { iguana: 1, moose: 1, scooter: 1, bike: 1, dala: 1 };   // drawn the way they're written
 
-  function spriteBig(g, rows, x, y, map, flip) {
+  function spriteBig(g, rows, x, y, map, flip, sc) {
+    const SC = sc || 2;   // (shadows the module's SC: a sprite can be drawn at its own scale)
     const w = rows[0].length, X = Math.round(x), Y = Math.round(y);
     const at = (j, k) => map[rows[j][flip ? w - 1 - k : k]];
     g.fillStyle = rgb(EDGE);                                  // the line round it first
@@ -61,13 +66,28 @@
       bridge(g, w, h, hz + 2, scroll * 0.3);
       D.grad(g, 0, gy, w, h, D.day ? [[120, 116, 140], [90, 86, 110]] : [[96, 86, 120], [60, 50, 84]]);
       for (let x = 0; x < w; x++) if (((x + scroll) | 0) % 12 < 5) { g.fillStyle = rgb([255, 214, 90]); g.fillRect(x, gy + Math.round((h - gy) * 0.5), 1, 1); }
-    } else {
+    } else if (lv === 2) {
       gamlaStan(g, w, h, hz + 2, scroll);    // the old town across the water, windows lit
       D.grad(g, 0, gy, w, h, D.day ? [[150, 140, 150], [116, 106, 120]] : [[110, 96, 120], [70, 58, 86]]);
       for (let i = 0; i < 40; i++) {         // cobbles
         const x = ((i * 9.7 - scroll) % w + w) % w, y = gy + 2 + (i * 5) % Math.max(2, Math.round(h - gy - 3));
         g.fillStyle = rgba([220, 210, 228], 0.55); g.fillRect(x | 0, y, 2, 1);
       }
+    } else {                                 // Rösås: the Swedish countryside, little red houses and birches
+      for (let i = 0; i < 4; i++) {          // far away, across the lake
+        const x = ((i * 61 + 20 - scroll * 0.15) % (w + 60) + w + 60) % (w + 60) - 30;
+        cottage(g, x, hz + 3, h * 0.045);
+      }
+      for (let i = 0; i < 9; i++) {
+        const x = ((i * 23 - scroll * 0.6) % (w + 30) + w + 30) % (w + 30) - 15;
+        birch(g, x, gy, h * (0.2 + hash(i) * 0.1));
+      }
+      for (let i = 0; i < 2; i++) {          // and close by, along the path
+        const x = ((i * 120 + 50 - scroll * 0.8) % (w + 120) + w + 120) % (w + 120) - 60;
+        cottage(g, x, gy - 2, h * 0.1);
+      }
+      D.grad(g, 0, gy, w, h, D.day ? [[110, 190, 110], [70, 150, 90]] : [[70, 160, 70], [30, 100, 60]]);
+      for (let i = 0; i < 14; i++) { const x = ((i * 13 - scroll) % w + w) % w; g.fillStyle = rgb(i % 2 ? [255, 255, 255] : [255, 220, 80]); g.fillRect(x | 0, gy + 2 + (i % 3), 1, 1); }   // flowers
     }
   }
 
@@ -165,19 +185,47 @@
     return { top: gy - r - deckH };
   }
 
-  // Stockholm: the two of them on one pink Voi, Andrea in front holding the bars, Lonis behind her
+  // when it jumps, the Roadster flies on its thrusters: jets of cold air blasting down from under it
+  // (flickering, fading as they go), and the air kicking up dust where it hits the road
+  function thrusters(g, cx, feet, gy, u, now) {
+    const len = Math.min(gy - feet + 4, 16 * u);
+    [-11, -2, 8].forEach((dx, n) => {
+      const x = Math.round(cx + dx * u);
+      for (let k = 0; k < len; k++) {
+        const fade = 1 - k / len, wob = Math.round(Math.sin(now * 0.05 + k * 0.9 + n) * (k / len) * 1.5);
+        g.fillStyle = rgba(k < 4 ? [255, 255, 255] : [196, 232, 255], Math.min(1, fade * (0.85 + 0.25 * Math.sin(now * 0.08 + k + n * 2))));
+        const wd = k < len * 0.35 ? 2 : k < len * 0.7 ? 3 : 4;
+        g.fillRect(x + wob - (wd >> 1) + 1, Math.round(feet + k), wd, 1);
+      }
+    });
+    const air = gy - feet;
+    if (air < 22 * u) {                                                 // close to the road: a puff of dust
+      const a = 1 - air / (22 * u);
+      for (let i = 0; i < 14; i++) {
+        const spread = (i % 2 ? 1 : -1) * (6 + (i * 3.3 + now * 0.03) % (18 * u));
+        g.fillStyle = rgba([220, 214, 236], a * 0.55 * (1 - Math.abs(spread) / (24 * u)));
+        g.fillRect(Math.round(cx + spread), gy - 1 - (i % 3), 2, 1);
+      }
+    }
+  }
+
+  // Stockholm: the two of them on one pink Voi, Lonis driving, Andrea behind him; VOI on its deck
   function voi(g, cx, gy, u) {
     const pink = [246, 112, 150], dark = [40, 34, 48], r = Math.max(2, Math.round(1.7 * u));
-    const x0 = Math.round(cx - 10 * u), x1 = Math.round(cx + 9 * u), deckY = gy - 2 * r;
-    g.fillStyle = rgb(pink); g.fillRect(x0, deckY - 1, x1 - x0, 2);                       // the deck
-    g.fillStyle = rgb(dark); g.fillRect(x0 + 1, deckY + 1, x1 - x0 - 2, 1);
+    const x0 = Math.round(cx - 10 * u), x1 = Math.round(cx + 9 * u), deckY = gy - 2 * r - 5;
+    g.fillStyle = rgb(pink); g.fillRect(x0, deckY - 1, x1 - x0, 7);                       // the deck, with VOI on its side
+    g.fillStyle = rgb(dark); g.fillRect(x0 + 1, deckY + 6, x1 - x0 - 2, 1);
+    const VOI = ['#.#.###.###', '#.#.#.#..#.', '#.#.#.#..#.', '#.#.#.#..#.', '.#..###.###'];
+    const lx = Math.round((x0 + x1) / 2 - 5);
+    g.fillStyle = rgb([255, 255, 255]);
+    VOI.forEach((row, j) => { for (let k = 0; k < row.length; k++) if (row[k] === '#') g.fillRect(lx + k, deckY + j, 1, 1); });
     g.fillStyle = rgb(pink);
-    for (let i = 0; i < 15 * u; i++) g.fillRect(Math.round(x1 + i * 0.12), Math.round(deckY - 1 - i), 2, 1);   // the stem
+    for (let i = 0; i < 15 * u; i++) g.fillRect(Math.round(x1 - 1 + i * 0.12), Math.round(deckY - 1 - i), 2, 1);   // the stem
     const topX = Math.round(x1 + 15 * u * 0.12), topY = Math.round(deckY - 1 - 15 * u);
     g.fillStyle = rgb(pink); g.fillRect(topX - Math.round(3 * u), topY, Math.round(4 * u) + 1, 2);              // handlebar
     g.fillStyle = rgb(dark); g.fillRect(topX - Math.round(3 * u), topY, 1, 2);                                   // its grip
     g.fillStyle = rgb([255, 250, 230]); g.fillRect(topX + 1, topY + 2, 1, 1);                                    // its light
-    [x0 + r, x1].forEach(wx => {                                                                                // wheels
+    [x0 + r, x1 - 1].forEach(wx => {                                                                            // wheels
       for (let yy = -r; yy <= r; yy++) for (let xx = -r; xx <= r; xx++) {
         const d = xx * xx + yy * yy;
         if (d > r * r + 0.5) continue;
@@ -187,13 +235,21 @@
     return { feet: deckY - 1 };
   }
 
+  // a little red Swedish house (falu red, white corners and window frames, lit windows, a dark roof)
   function cottage(g, x, gy, s) {
-    const red = D.light ? [178, 40, 34] : PAL.falu, white = [250, 246, 240];
-    g.fillStyle = rgb(red); g.fillRect(Math.round(x), Math.round(gy - s), Math.round(s * 1.6), Math.round(s));
-    g.fillStyle = rgb(D.light ? [60, 50, 60] : [40, 30, 50]);
-    for (let i = 0; i < s * 0.6; i++) g.fillRect(Math.round(x - 1 + i), Math.round(gy - s - i), Math.max(1, Math.round(s * 1.6 + 2 - i * 2)), 1);
-    g.fillStyle = rgb(white); g.fillRect(Math.round(x + s * 0.3), Math.round(gy - s * 0.65), 2, 2); g.fillRect(Math.round(x + s * 1.0), Math.round(gy - s * 0.65), 2, 2);
-    g.fillRect(Math.round(x), Math.round(gy - s), 1, Math.round(s)); g.fillRect(Math.round(x + s * 1.6) - 1, Math.round(gy - s), 1, Math.round(s));
+    const red = [214, 58, 46], white = [250, 246, 240], roof = [84, 64, 88], lit = [255, 214, 120];
+    const W = Math.round(s * 1.6), H = Math.round(s), X = Math.round(x), Y = Math.round(gy - s);
+    g.fillStyle = rgb(red); g.fillRect(X, Y, W, H);
+    g.fillStyle = rgb(roof);
+    for (let i = 0; i < s * 0.6; i++) g.fillRect(X - 1 + i, Y - 1 - i, Math.max(1, W + 2 - i * 2), 1);
+    g.fillStyle = rgb(white);
+    g.fillRect(X, Y, 1, H); g.fillRect(X + W - 1, Y, 1, H);                         // the corners
+    const win = Math.max(2, Math.round(s * 0.28));
+    [X + Math.round(s * 0.25), X + W - Math.round(s * 0.25) - win].forEach(wx => {   // two windows
+      g.fillStyle = rgb(white); g.fillRect(wx - 1, Y + Math.round(s * 0.3) - 1, win + 2, win + 2);
+      g.fillStyle = rgb(lit); g.fillRect(wx, Y + Math.round(s * 0.3), win, win);
+    });
+    if (s > 8) { g.fillStyle = rgb(white); g.fillRect(X + Math.round(W / 2) - 1, Y + Math.round(s * 0.45), 3, H - Math.round(s * 0.45)); }   // the door
   }
   function birch(g, x, gy, hh) {
     for (let i = 0; i < hh; i++) { g.fillStyle = rgb(i % 5 === 2 ? [40, 34, 40] : PAL.birch); g.fillRect(Math.round(x), Math.round(gy - i), 1, 1); }
@@ -230,18 +286,18 @@
   // ?stop=rosas (a run started like that doesn't count for the high scores)
   function startAt() {
     const k = (new URLSearchParams(location.search).get('stop') || '').toLowerCase().replace(/[^a-z]/g, '');
-    return { sf: 1, sanfrancisco: 1, stockholm: 2, rosas: 3 }[k] ? { sf: LEVEL_T, sanfrancisco: LEVEL_T, stockholm: LEVEL_T * 2, rosas: LEVEL_T * 3 - 3 }[k] : 0;
+    return { sf: 1, sanfrancisco: 1, stockholm: 2, rosas: 3 }[k] ? { sf: LEVEL_T, sanfrancisco: LEVEL_T, stockholm: LEVEL_T * 2, rosas: LEVEL_T * 3 }[k] : 0;
   }
 
   function fresh(w, h) {
     const at = startAt();
-    return { lv: 0, t: at, skip: at > 0, scroll: 0, y: 0, vy: 0, onGround: true, jumps: 0, obs: [], pick: [], next: 60, lives: 3, hit: -9, hearts: 0, done: false, arrive: null, fade: 0 };
+    return { lv: Math.min(2, Math.floor(at / LEVEL_T)), t: at, skip: at > 0, scroll: 0, y: 0, vy: 0, onGround: true, jumps: 0, obs: [], pick: [], next: 60, lives: 3, hit: -9, hearts: 0, done: false, arrive: null, fade: 0 };
   }
 
   const game = {
-    id: 'run', name: 'Island to Sweden', kicker: 'Game 4',
+    id: 'run', name: 'Island to Sweden', kicker: 'Game 3',
     blurb: 'Run from Roatán through San Francisco to Rösås.',
-    how: 'Three stops on the way to the wedding: Roatán, San Francisco, then Stockholm. Make it through one and the next unlocks (San Francisco comes with a matte black Roadster, Stockholm with a pink Voi for two); get through all three to reach Rösås. Tap to jump, tap again in the air to jump higher. Collect hearts and dodge crabs, robotaxis and e-scooters. You have three lives.',
+    how: 'From the island to the wedding, one stop at a time. Make it through one and the next unlocks. Tap to jump, tap again in the air to jump higher. Collect hearts, dodge everything else. Three lives.',
     better: 'high', disco: false, thumbScene: 0.7,
     sceneAt: () => S ? LEVELS[S.lv].p : LEVELS[0].p,
     fmt: v => v + ' ♡',
@@ -264,7 +320,7 @@
       const w = api.st.w, h = api.st.h, gy = Math.round(h * 0.8), u = h / 112;
       S.t += dt;
       const lv = Math.min(2, Math.floor(S.t / LEVEL_T));
-      if (lv !== S.lv) { S.lv = lv; S.fade = 1; api.toast('Next stop: ' + LEVELS[lv].name + (lv === 1 ? ' 🚗' : lv === 2 ? ' 🛴' : ''), w * 0.5, h * 0.3, 'big warm'); stripAll(api); }
+      if (lv !== S.lv) { S.lv = lv; S.fade = 1; api.toast('Next stop: ' + LEVELS[lv].name, w * 0.5, h * 0.3, 'big warm'); stripAll(api); }
       S.fade = Math.max(0, S.fade - dt * 0.8);
       const speed = (S.done ? 0 : LEVELS[S.lv].speed + (S.t % LEVEL_T) * 0.25) * Math.max(1, w / 72);
       S.scroll += speed * dt;
@@ -286,7 +342,7 @@
           for (let i = 0; i < n; i++) S.pick.push({ x: w + 4 + spr.rows[0].length * SC / 2 + (i - (n - 1) / 2) * 9 + (arcUp ? 0 : 40), y: arcUp ? gy - spr.rows.length * SC - 12 - Math.sin((i + 0.5) / n * Math.PI) * 10 : gy - 8 });
           S.next = 52 + Math.random() * 46 + speed * 0.4 + spr.rows[0].length * SC + (k === 'robotaxi' ? 22 : 0);
         }
-      } else if (!S.arrive) S.arrive = { x: w + 30 };
+      } else if (!S.arrive) { S.arrive = { x: w + 30 + w * 2 }; api.toast('Next stop: Rösås', w * 0.5, h * 0.3, 'big warm'); }   // a little stretch of countryside first
 
       const px = Math.round(w * 0.24), feet = gy + S.y;
       const box = { l: px - 7 * u, r: px + 9 * u, t: feet - 27 * u, b: feet };
@@ -325,8 +381,12 @@
 
     draw(api, now) {
       const g = api.st.g, w = api.st.w, h = api.st.h, gy = Math.round(h * 0.8), u = h / 112;
-      placeScene(g, w, h, S.lv, S.scroll, now);
-      if (S.arrive) arch(g, S.arrive.x, gy, h, now);
+      placeScene(g, w, h, S.t >= LEVEL_T * 3 ? 3 : S.lv, S.scroll, now);
+      if (S.arrive) {
+        arch(g, S.arrive.x, gy, h, now);
+        const hop = S.done ? Math.abs(Math.sin(now * 0.012)) * 4 : 0;          // so happy to see you
+        spriteBig(g, DOG.rows, S.arrive.x + 18, gy - DOG.rows.length - hop, DOG.map, false, 1);
+      }
       for (const p of S.pick) D.pixelHeart(g, p.x, p.y + Math.sin(now * 0.005 + p.x) * 0.8, true, D.HEART_COLS[0]);
       for (const o of S.obs) {
         const spr = SPR[o.k], flip = !!FACING[o.k];
@@ -336,15 +396,20 @@
       }
       const px = Math.round(w * 0.24), feet = gy + S.y;
       const blink = S.t - S.hit < 1.4 && Math.floor(S.t * 12) % 2 === 0 && api.running;
+      if (S.lv === 1 && !S.onGround) thrusters(g, px + u, feet, gy, u, now);   // the Roadster's cold-air jets
       if (!blink && S.lv === 1) {                                     // San Francisco: in the Roadster
         const car = roadster(g, px + u, feet, u);
         const seat = feet + 6 * u;                                     // sitting low: from the waist up shows
-        Bebs.andrea(g, px - 3 * u, seat, u, { pose: 'stand', t: now / 1000, cut: (seat - car.top - u) / (24 * u) });
-        Bebs.lonis(g, px + 6 * u, seat, u, { pose: 'stand', t: now / 1000, cut: (seat - car.top - u) / (28 * u) });
-      } else if (!blink && S.lv === 2 && !S.done) {                    // Stockholm: both on one pink Voi
+        // Andrea drives (her side is the one we see), Lonis in the passenger seat beside her
+        g.fillStyle = rgb([24, 22, 30]);                               // the steering wheel in front of her
+        for (let i = 0; i < 3 * u; i++) g.fillRect(Math.round(px + 4.5 * u + i * 0.5), Math.round(car.top - i), 1, 1);
+        g.fillRect(Math.round(px + 5.2 * u), Math.round(car.top - 3.2 * u), 2, 1);
+        Bebs.lonis(g, px - 2 * u, seat, u, { pose: 'stand', t: now / 1000, cut: (seat - car.top - u) / (28 * u) });
+        Bebs.andrea(g, px + 1.5 * u, seat, u, { pose: 'stand', t: now / 1000, cut: (seat - car.top - u) / (24 * u) });
+      } else if (!blink && S.lv === 2 && S.t < LEVEL_T * 3) {          // Stockholm: both on one pink Voi
         const sc = voi(g, px + u, feet, u);
-        Bebs.lonis(g, px - 3 * u, sc.feet, u, { pose: 'stand', t: now / 1000 });
-        Bebs.andrea(g, px + 3 * u, sc.feet, u, { pose: 'stand', t: now / 1000 });
+        Bebs.andrea(g, px - 3.5 * u, sc.feet, u, { pose: 'stand', t: now / 1000 });   // holding on behind him
+        Bebs.lonis(g, px + 2.5 * u, sc.feet, u, { pose: 'stand', t: now / 1000 });    // Lonis drives
       } else if (!blink) {
         const air = !S.onGround, ph = S.scroll * 0.22;
         const pose = S.done ? 'hold' : air ? 'jump' : 'run';
