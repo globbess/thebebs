@@ -9,16 +9,21 @@
 
 (() => {
   'use strict';
-  const GAMES = ['kick', 'list', 'run', 'sun'];
+  const GAMES = ['kick', 'list', 'run', 'sun', 'trivia', 'chess'];
   const ONLINE = /(^|\.)thebebs\.com$/.test(location.hostname) && !!window.SHEET_URL;
   const LOCAL = 'bebs-arcade:hiscores-pretend', NAME = 'bebs-arcade:name';
   const RUDE = /fuck|shit|cunt|bitch|pussy|nigg|faggot|whore|slut|nazi|puta|puto|mierda|verga|pendej|hijueput|joder|fitta|knull|horunge/;
   let boards = null, ready = !ONLINE;   // ready: the sheet answers with scores (its script knows about them)
 
   const empty = () => { const o = {}; GAMES.forEach(g => { o[g] = []; }); return o; };
-  const lowFirst = { list: true };
+  const lowFirst = { list: true, chess: true };
+  // best first; each name once, with its best; the top 10
   function sortAll(o) {
-    GAMES.forEach(g => { (o[g] = o[g] || []).sort((a, b) => lowFirst[g] ? a[1] - b[1] : b[1] - a[1]); o[g] = o[g].slice(0, 10); });
+    GAMES.forEach(g => {
+      (o[g] = o[g] || []).sort((a, b) => lowFirst[g] ? a[1] - b[1] : b[1] - a[1]);
+      const seen = new Set();
+      o[g] = o[g].filter(([n]) => { const k = String(n).toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; }).slice(0, 10);
+    });
     return o;
   }
   function clean(n) {
@@ -38,6 +43,7 @@
   function qualifies(game, score) {
     // (until the sheet's script has high scores in it, a score would land in the RSVPs: so, not yet)
     if (!ready || GAMES.indexOf(game) < 0 || score == null || !isFinite(score)) return false;
+    if (!lowFirst[game] && score <= 0) return false;                  // nobody gets on the board with a zero
     const b = (boards && boards[game]) || [];
     if (b.length < 10) return true;
     const worst = b[b.length - 1][1];

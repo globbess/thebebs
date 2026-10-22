@@ -213,6 +213,13 @@
       title = 'A draw';
       text = { stalemate: 'Stalemate. Very diplomatic.', fifty: 'Fifty moves of nothing. Time to dance instead.', material: 'Not enough pieces left to win. Hug it out.', repetition: 'The same moves three times. Like an old married couple.' }[status.result] || 'Nobody wins. Everybody dances.';
     }
+    // beating Lonis on Serious goes on the high scores: the fewest moves to checkmate him
+    const moves = Math.ceil(S.hist.length / 2);
+    if (status.result === 'checkmate' && S.mode === 'ai' && status.winner === S.me && S.lvl === 'serious') {
+      api.end({ kicker: 'Bebchess', title, text, score: moves, scoreText: 'checkmate in ' + moves + ' moves', again: 'New game', delay: 900 });
+      return;
+    }
+    if (status.result === 'checkmate' && S.mode === 'ai' && status.winner === S.me) text += ' Beat him on Serious to get on the high scores.';
     setTimeout(() => { if (S && S.over) api.card({ kicker: 'Bebchess', title, text, buttons: [{ label: 'New game', on: () => newGame(api) }, { label: 'See the board', quiet: true, on: () => api.uncard() }] }); }, 900);
   }
 
@@ -231,7 +238,9 @@
   }
 
   const game = {
-    id: 'chess', name: 'Bebchess', thumbBackdrop: false,          // the board fills its picture kicker: 'Game 6', panel: true, scene: 0.985, disco: true,
+    id: 'chess', name: 'Bebchess', kicker: 'Game 6', panel: true, scene: 0.985, disco: true,
+    thumbBackdrop: false,                                          // the board fills its picture
+    better: 'low', fmt: v => v + ' moves',                         // the high scores: checkmating Lonis (Serious) in the fewest moves
     blurb: 'Team Andrea against Team Lonis. His pieces are black, obviously.',
     // the board fills the width (or the height left between Team Lonis and the panel): 8 squares of SQ dots
     get cell() { return Math.max(2.4, Math.min(window.innerWidth - 24, window.innerHeight - 380) / (SQ * 8)); },
@@ -245,6 +254,8 @@
       at('k', 1, 0); at('q', 2, 0); at('n', 0, 1); at('p', 3, 1);
       at('P', 1, 1); at('B', 2, 2); at('K', 1, 2); at('Q', 3, 2);
     },
+
+    start(api) { if (S && S.st) newGame(api); },                 // 'New game' on the end card
 
     setup(api) {
       S = null;
