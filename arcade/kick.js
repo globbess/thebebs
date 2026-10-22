@@ -105,20 +105,25 @@
       ? Math.abs(bx - K.hx) < 5.5 * u2 + 1 && (K.high ? bz > 6 * u2 && bz < 24 * u2 : bz < 14 * u2)
       : Math.abs(bx - kx) < 8 * u2 && bz < 20 * u2);
     let res, msg, cls;
-    if (post) { res = 'miss'; msg = 'off the post!'; cls = 'warm'; s.bounce = { vx: (Math.random() - 0.5) * 30, vz: 20 }; }
-    else if (wide) { res = 'miss'; msg = 'wide'; cls = 'warm'; }
-    else if (over) { res = 'miss'; msg = 'over the bar'; cls = 'warm'; }
-    else if (saved) { res = 'save'; msg = ['saved. he’s serving.', 'not today', 'Lonis says no', 'serving since birth'][S.n % 4]; cls = 'flag'; s.bounce = { vx: (bx < kx ? -1 : 1) * 26, vz: 16 }; }
-    else { res = 'goal'; msg = ['GOAL!', 'top bins!', 'what a strike', 'into the net', 'unstoppable'][(Math.random() * 5) | 0]; cls = 'big'; S.goals++; S.bulge = { x: bx, y: G.gl - bz, k: 1 }; }
+    if (post) { res = 'miss'; msg = 'off the post!'; cls = 'warm sign'; s.bounce = { vx: (Math.random() - 0.5) * 30, vz: 20 }; }
+    else if (wide) { res = 'miss'; msg = 'wide'; cls = 'warm sign'; }
+    else if (over) { res = 'miss'; msg = 'over the bar'; cls = 'warm sign'; }
+    else if (saved) {
+      // the save: a flash where his gloves meet the ball, and the ball parried back out towards you
+      res = 'save'; msg = ['SAVED! 🧤', 'Lonis says no 🧤', 'Not today 🧤', 'What a save 🧤'][S.n % 4]; cls = 'big flag sign';
+      S.burst = { x: bx, y: G.gl - bz, k: 1 };
+      S.parry = { x: bx, y: G.gl - bz, side: bx < kx ? -1 : 1, t: 0 };
+    }
+    else { res = 'goal'; msg = ['GOAL!', 'top bins!', 'what a strike', 'into the net', 'unstoppable'][(Math.random() * 5) | 0]; cls = 'big sign'; S.goals++; S.bulge = { x: bx, y: G.gl - bz, k: 1 }; }
     S.res[S.n] = res;
     S.react = res;
     K.face = res === 'goal' ? 'sad' : 'grin';
-    K.pose = res === 'save' ? 'serve' : res === 'goal' ? 'stand' : 'wave';
-    api.toast(msg, clamp(bx, 10, w - 10), G.gl - G.gh - 4, cls);
+    K.pose = res === 'save' ? 'up' : res === 'goal' ? 'stand' : 'wave';            // a save: he's up and celebrating
+    api.toast(msg, clamp(bx, 14, w - 14), G.gl - G.gh - 6, cls, res === 'save' ? 2200 : 1600);
     if (res === 'goal') api.buzz(30);
     S.n++;
     kicksHud(api);
-    S.phase = 'done'; S.msgT = 1.3;
+    S.phase = 'done'; S.msgT = res === 'save' ? 2 : 1.3;
   }
 
   const game = {
@@ -156,6 +161,8 @@
         const s = S.shot;
         if (s.bounce) { s.tx += s.bounce.vx * dt; s.ty = Math.max(0, s.ty + s.bounce.vz * dt); s.bounce.vz -= 60 * dt; }
         if (S.bulge) S.bulge.k = Math.max(0, S.bulge.k - dt * 1.5);
+        if (S.burst) S.burst.k = Math.max(0, S.burst.k - dt * 1.6);
+        if (S.parry) S.parry.t = Math.min(1, S.parry.t + dt / 0.75);
         if (S.msgT <= 0) {
           if (S.react !== 'goal') {                         // one he saved (or you missed): that's the end
             const g = S.goals;
@@ -163,7 +170,7 @@
             const text = g >= 10 ? 'Lonis would like a word. And a rematch on Sunday.' : g >= 3 ? 'Bring that to Sunday football at the wedding.' : 'He has been serving since the day he was born. See you on Sunday.';
             S.phase = 'over';
             api.end({ title, text, score: g, scoreText: goalsText(g) + ' in a row', delay: 200 });
-          } else { S.phase = 'aim'; S.shot = null; K.x = 0; K.rot = 0; K.pose = 'out'; K.face = 'grin'; S.react = null; S.bulge = null; }
+          } else { S.phase = 'aim'; S.shot = null; K.x = 0; K.rot = 0; K.pose = 'out'; K.face = 'grin'; S.react = null; S.bulge = null; S.burst = null; S.parry = null; }
         }
       } else if (S.phase === 'aim') {
         K.x = Math.sin(api.time * 2.2) * 3;   // shuffling on his line
@@ -180,12 +187,28 @@
         const k = s.k, gy = lerp(G.by, G.gl, D.smooth(k)), z = (s.ty * k) + 5 * k * (1 - k);
         bxp = lerp(G.bx, s.tx, k); byp = gy - z; br = lerp(3, 1.5, k);
         if (S.phase === 'done') { bxp = s.tx; byp = G.gl - s.ty; br = 1.5; }
+        if (S.parry) {                                       // parried: back out of the goal, towards you, spinning off to the side
+          const d = D.smooth(S.parry.t);
+          bxp = S.parry.x + S.parry.side * d * G.gw * 0.45; byp = lerp(S.parry.y, G.by - 4, d) - Math.sin(d * Math.PI) * G.gh * 0.6; br = 1.5 + d * 2.5;
+        }
       }
       const behind = s && s.k > 0.98 && S.react === 'goal';
       if (behind) ball(g, bxp, byp, br, s ? s.spin : 0);
       Bebs.lonis(g, G.bx + K.x, G.gl - (K.rot ? Math.abs(K.rot) * 2 : 0), G.u * 1.25, { pose: K.pose, rot: K.rot, pivot: -14, t, face: K.face });
       goalFrame(g, G);
-      if (!behind) ball(g, bxp, byp, br, s ? s.spin : 0);
+      if (!behind) ball(g, bxp, byp, br, s ? (S.parry ? S.parry.t * 20 : s.spin) : 0);
+      if (S.burst && S.burst.k > 0) {                        // the flash of the save: a star of light where he got a glove to it
+        const k = S.burst.k, R = (1 - k) * 15 + 4;
+        g.fillStyle = rgba([255, 255, 255], k); g.beginPath(); g.arc(S.burst.x, S.burst.y, 3 * k + 1, 0, D.TAU); g.fill();
+        for (let i = 0; i < 12; i++) {
+          const an = i / 12 * D.TAU + 0.3;
+          for (let j = 0; j < 4; j++) {
+            const rr = R * (0.4 + j * 0.2);
+            g.fillStyle = rgba(j < 2 ? [255, 255, 255] : [255, 214, 120], Math.min(1, k * 1.3));
+            g.fillRect(Math.round(S.burst.x + Math.cos(an) * rr) - 1, Math.round(S.burst.y + Math.sin(an) * rr) - 1, 2, 2);
+          }
+        }
+      }
       // Andrea on the touchline
       const ap = S.react === 'goal' ? 'up' : S.react === 'save' ? 'stand' : 'hug';
       Bebs.andrea(g, w * 0.14, h - 2, G.u * 2.1, { pose: ap, t, face: S.react === 'goal' ? 'grin' : S.react === 'save' ? 'sad' : 'smile', fit: { top: 'babytee', bottom: 'lowrise', shoes: 'sneakers' } });
