@@ -426,3 +426,15 @@ button:focus-visible, a:focus-visible{ outline: 2px solid var(--accent); outline
 }
 .toast.sign.unlock{ color: var(--ink); }
 .toast.sign.small{ padding: 5px 11px; font-size: 15px; box-shadow: 0 0 12px 6px rgba(var(--panel-rgb),.86); }
+/* Lonis's thought bubble over his head */
+.tv-bubble{
+  position: absolute; z-index: 3; transform: translate(-92%, -100%);
+  width: max-content; max-width: min(40vw, 240px); padding: 9px 14px;
+  font-size: 15px; line-height: 1.3; color: #2b2326; background: #fffdf8;
+  border-radius: 18px; box-shadow: 0 6px 22px rgba(0,0,0,.28);
+  pointer-events: none; animation: bubble-in .3s cubic-bezier(.2,.9,.3,1.3);
+}
+.tv-bubble::before, .tv-bubble::after{ content: ""; position: absolute; border-radius: 50%; background: #fffdf8; }
+.tv-bubble::before{ width: 12px; height: 12px; right: 6px; bottom: -10px; }
+.tv-bubble::after{ width: 7px; height: 7px; right: -2px; bottom: -19px; }
+@keyframes bubble-in{ from{ opacity: 0; transform: translate(-92%, -80%) scale(.8); } to{ opacity: 1; transform: translate(-92%, -100%) scale(1); } }

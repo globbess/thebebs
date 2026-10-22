@@ -18,7 +18,19 @@
     ['AI', 'Data centers use “PUE” to measure…', ['How efficiently they use energy', 'How fast their internet is', 'How many servers fit in a rack', 'How cool the floor is']],
     ['AI', 'GPUs, the chips behind today’s AI, were first designed for…', ['Video game graphics', 'Bitcoin mining', 'Weather forecasting', 'Space missions']],
     ['AI', 'The term “artificial intelligence” comes from a 1956 workshop at which college?', ['Dartmouth', 'MIT', 'Stanford', 'Carnegie Mellon'], 'MIT', 'Close, the right coast at least.'],
+    ['AI', 'Which company is the only maker of the EUV machines that print the most advanced chips?', ['ASML', 'Applied Materials', 'Canon', 'TSMC']],
+    ['AI', 'Which company manufactures most of the world’s leading-edge chips, Nvidia’s included?', ['TSMC', 'Intel', 'Samsung', 'GlobalFoundries']],
+    ['AI', 'HBM, one of the big bottlenecks for AI chips, stands for…', ['High Bandwidth Memory', 'Hyper Binary Module', 'Heavy Bit Machine', 'High Boost Mainframe']],
     ['AI', 'Which company makes the H100 chips many AI models are trained on?', ['Nvidia', 'Intel', 'AMD', 'Qualcomm']],
+    ['Governance', 'Who is called the “Father of the Constitution”?', ['James Madison', 'Thomas Jefferson', 'Alexander Hamilton', 'Benjamin Franklin']],
+    ['Governance', 'Who was the main author of the Declaration of Independence?', ['Thomas Jefferson', 'John Adams', 'George Washington', 'James Madison']],
+    ['Governance', 'In what year was the US Constitution signed?', ['1787', '1776', '1791', '1812']],
+    ['Governance', 'The Federalist Papers were written by Hamilton, Madison and…', ['John Jay', 'John Adams', 'Thomas Jefferson', 'Benjamin Franklin']],
+    ['Governance', 'The Bill of Rights is the first how many amendments to the Constitution?', ['Ten', 'Five', 'Twelve', 'Twenty']],
+    ['Governance', 'Which Founding Father is on the $100 bill?', ['Benjamin Franklin', 'Alexander Hamilton', 'George Washington', 'Thomas Jefferson']],
+    ['Governance', 'Where did the Industrial Revolution begin?', ['Britain', 'France', 'The Netherlands', 'China']],
+    ['Governance', 'In which century was the Magna Carta, an early limit on a king’s power, sealed?', ['The 13th', 'The 10th', 'The 16th', 'The 18th']],
+    ['Governance', 'English common law is built mostly from…', ['Precedent from past court cases', 'One written code', 'Royal decrees', 'Church law']],
     ['Governance', 'Which country votes on national referendums several times a year?', ['Switzerland', 'Norway', 'Japan', 'Canada']],
     ['Governance', 'Montesquieu is best known for which idea?', ['The separation of powers', 'The social contract', 'The invisible hand', 'The dialectic']],
     ['Governance', 'How many countries are in the European Union?', ['27', '25', '28', '30']],
@@ -32,6 +44,8 @@
     ['Free markets', 'Which city topped the Index of Economic Freedom 25 years in a row?', ['Hong Kong', 'Singapore', 'Dubai', 'Zurich']],
     ['Free markets', 'Most big US companies are incorporated in which state, for its business-friendly courts?', ['Delaware', 'Nevada', 'Texas', 'Wyoming']],
     ['Free markets', 'In Dubai’s free zones, foreign investors can own how much of their company?', ['100%', '49%', '51%', '25%']],
+    ['Free markets', 'Spain’s colonies mined most of the world’s silver from 1500 to 1800. What happened to Spain?', ['It fell behind England and the Dutch', 'It led the Industrial Revolution', 'It became Europe’s richest country for centuries', 'It stopped using money']],
+    ['Free markets', 'Before about 1700, how fast did GDP per capita grow?', ['It barely grew at all', 'About 2% a year', 'About 5% a year', 'It doubled every generation']],
     ['Free markets', 'According to the IMF, which country has the highest GDP per capita?', ['Luxembourg', 'Switzerland', 'Norway', 'The United States']],
     ['Free markets', 'Why is Ireland’s GDP per capita so high?', ['Big tech and pharma book profits there', 'Its oil reserves', 'Tourism', 'Its tiny population']],
     ['Free markets', 'Which country went from poor to one of the richest per person within decades of independence in 1965?', ['Singapore', 'Malaysia', 'The Philippines', 'Cambodia']],
@@ -40,6 +54,7 @@
     ['Liberty', 'Who wrote “Atlas Shrugged”?', ['Ayn Rand', 'Robert Nozick', 'Murray Rothbard', 'Friedrich Hayek']],
     ['Liberty', 'Who wrote “Anarchy, State, and Utopia” (1974)?', ['Robert Nozick', 'John Rawls', 'Ayn Rand', 'Milton Friedman']],
     ['Liberty', 'The “non-aggression principle” says…', ['Don’t start force against others', 'Never pay taxes', 'Always vote', 'Keep borders closed']],
+    ['Liberty', 'Which French writer, exiled in England, praised its tolerance and its respect for merchants?', ['Voltaire', 'Rousseau', 'Montesquieu', 'Diderot']],
     ['Liberty', 'Which amendment to the US Constitution protects free speech?', ['The First', 'The Second', 'The Fifth', 'The Tenth']],
     ['Liberty', 'Which country passed the world’s first freedom of the press law, in 1766?', ['Sweden', 'England', 'The United States', 'France']],
     ['Liberty', 'Who wrote “I disapprove of what you say, but I will defend to the death your right to say it”?', ['Evelyn Beatrice Hall', 'Voltaire', 'Thomas Jefferson', 'John Stuart Mill'], 'Voltaire', 'Everyone says Voltaire. It was his biographer.'],
@@ -111,9 +126,28 @@
     if (right) { S.mine_n++; api.buzz(14); }
     if (q.lonis === q.right) S.his_n++;
     S.react = { right, t: performance.now() };
-    const st = api.st, P = place(st);
-    api.toast(right ? (q.lonis === q.right ? 'both right!' : 'you got one on him!') : (q.lonis === q.right ? 'he got that one' : 'neither of you!'), st.w / 2, P.top - 6, right ? 'big' : 'warm');
+    const his = q.lonis === q.right;
+    bubble(api, right ? (his ? 'rightBoth' : 'rightOnly') : (his ? 'wrongHim' : 'wrongBoth'));
     screen(api);
+  }
+
+  // what Lonis thinks of your answer, in a bubble over his head
+  const SAYS = {
+    rightBoth: ['I taught you that 😌', 'Correct 🔥', 'Someone’s been reading my blog 🔥', 'Proud of you 🔥'],
+    rightOnly: ['…ok, you got me 💀', 'Don’t tell anyone 💀', 'Who taught you THAT? 🔥', 'Fine. Point to you 💀'],
+    wrongHim: ['💀💀💀', 'Not even close 💀', 'We need to talk 💀', 'Oh no 💀 read my blog'],
+    wrongBoth: ['Let’s pretend that didn’t happen 💀', 'Neither of us? Next.', '💀 skip']
+  };
+  function bubble(api, kind) {
+    const old = api.el.querySelector('.tv-bubble'); if (old) old.remove();
+    const st = api.st, P = place(st), b = el('div', 'tv-bubble');
+    const lines = SAYS[kind]; b.textContent = lines[(Math.random() * lines.length) | 0];
+    b.style.top = (P.top + 1 * P.u) * st.cell + 'px';
+    api.el.appendChild(b);
+    // to the left of his head (the mirror ball hangs on the right), kept on screen
+    const x = (st.w / 2 - 7 * P.u) * st.cell, wd = b.offsetWidth;
+    b.style.left = Math.max(10 + wd * 0.92, x) + 'px';
+    clearTimeout(S.bubbleT); S.bubbleT = setTimeout(() => b.remove(), 2800);
   }
 
   function finish(api) {
@@ -175,7 +209,7 @@
       if (S && S.phase === 'start') questionMark(g, st.w / 2 + 9 * P.u, P.top - 2, 1);
     },
 
-    close(api) { api.panel.onclick = null; }
+    close(api) { api.panel.onclick = null; const o = api.el.querySelector('.tv-bubble'); if (o) o.remove(); }
   };
 
   Arcade.add(game);
