@@ -4,6 +4,7 @@
 
 (() => {
   'use strict';
+  const T = s => (window.tr ? window.tr(s) : s), TV = (s, v) => (window.tr ? window.tr(s, v) : s.replace(/\{(\w+)\}/g, (m, n) => v[n]));   // lang.js
   const D = window.Dots;
   const TOPICS = ['AI', 'Governance', 'Free markets', 'Liberty', 'Animals'];
   // [topic, question, answers (the first is right; they're shuffled when shown), what Lonis said
@@ -86,18 +87,20 @@
     P.innerHTML = '';
     const box = el('div', 'tv');
     if (S.phase === 'start') {
-      box.append(el('p', 'tv-meta', 'Trivia'));
-      const h = el('p', 'tv-q'); h.append('Lonis took this quiz and got ', el('b', null, S.his + '/' + N), '. Can you beat him?');
-      box.append(h, el('p', 'tv-small', 'Ten questions on his favorite things: AI, governance, free markets, liberty and animals.'));
-      const go = el('button', 'btn', 'Start'); go.type = 'button'; go.dataset.act = 'go';
+      box.append(el('p', 'tv-meta', T('Trivia')));
+      // his score in bold, wherever the sentence puts it
+      const h = el('p', 'tv-q'), parts = TV('Lonis took this quiz and got {score}. Can you beat him?', { score: '\u0000' }).split('\u0000');
+      h.append(parts[0], el('b', null, S.his + '/' + N), parts[1] || '');
+      box.append(h, el('p', 'tv-small', T('Ten questions on his favorite things: AI, governance, free markets, liberty and animals.')));
+      const go = el('button', 'btn', T('Start')); go.type = 'button'; go.dataset.act = 'go';
       const row = el('div', 'tv-row'); row.append(go); box.append(row);
     } else {
       const q = S.qs[S.i];
-      box.append(el('p', 'tv-meta', 'Question ' + (S.i + 1) + ' of ' + N + ' · ' + q.topic));
-      box.append(el('p', 'tv-q', q.text));
+      box.append(el('p', 'tv-meta', TV('Question {i} of {n} · {topic}', { i: S.i + 1, n: N, topic: T(q.topic) })));
+      box.append(el('p', 'tv-q', T(q.text)));
       const list = el('div', 'tv-answers');
       q.options.forEach((o, n) => {
-        const b = el('button', 'tv-a', o); b.type = 'button'; b.dataset.n = n;
+        const b = el('button', 'tv-a', T(o)); b.type = 'button'; b.dataset.n = n;
         if (S.answered) {
           b.disabled = true;
           if (o === q.right) b.classList.add('right');
@@ -109,11 +112,11 @@
       box.append(list);
       if (S.answered) {
         const ok = q.lonis === q.right;
-        box.append(el('p', 'tv-lonis', ok ? 'Lonis got it too ✓' : 'Lonis said ' + q.lonis + ' ✗ ' + q.quip));
-        const nx = el('button', 'btn', S.i + 1 < N ? 'Next' : 'See how you did'); nx.type = 'button'; nx.dataset.act = 'next';
+        box.append(el('p', 'tv-lonis', ok ? T('Lonis got it too ✓') : TV('Lonis said {answer} ✗ {quip}', { answer: T(q.lonis), quip: T(q.quip) })));
+        const nx = el('button', 'btn', T(S.i + 1 < N ? 'Next' : 'See how you did')); nx.type = 'button'; nx.dataset.act = 'next';
         const row = el('div', 'tv-row'); row.append(nx); box.append(row);
       }
-      box.append(el('p', 'tv-score', 'You ' + S.mine_n + ' · Lonis ' + S.his_n));
+      box.append(el('p', 'tv-score', TV('You {a} · Lonis {b}', { a: S.mine_n, b: S.his_n })));
     }
     P.append(box);
   }
@@ -141,7 +144,7 @@
   function bubble(api, kind) {
     const old = api.el.querySelector('.tv-bubble'); if (old) old.remove();
     const st = api.st, P = place(st), b = el('div', 'tv-bubble');
-    const lines = SAYS[kind]; b.textContent = lines[(Math.random() * lines.length) | 0];
+    const lines = SAYS[kind]; b.textContent = T(lines[(Math.random() * lines.length) | 0]);
     b.style.top = (P.top + 1 * P.u) * st.cell + 'px';
     api.el.appendChild(b);
     // to the left of his head (the mirror ball hangs on the right), kept on screen

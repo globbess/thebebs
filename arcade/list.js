@@ -4,6 +4,7 @@
 
 (() => {
   'use strict';
+  const T = s => (window.tr ? window.tr(s) : s);   // lang.js
   const D = window.Dots, { rgb, rgba, PAL } = D;
 
   const TRAITS = [
@@ -78,7 +79,7 @@
   }
 
   function renderStrip(api) {
-    api.strip.innerHTML = TRAITS.map(tr => '<span class="tick" data-k="' + tr.k + '"><span class="box"></span>' + tr.label + '</span>').join('');
+    api.strip.innerHTML = TRAITS.map(it => '<span class="tick" data-k="' + it.k + '"><span class="box"></span>' + T(it.label) + '</span>').join('');
   }
   function check(api, k) {
     const n = api.strip.querySelector('[data-k="' + k + '"]');
@@ -88,7 +89,7 @@
   }
   function hud(api) {
     const s = Math.floor(S.won ? S.winT : S.t), m = Math.floor(s / 60);
-    api.hud('<span class="chip lives" aria-label="' + S.lives + ' lives">' + '♥'.repeat(S.lives) + '<span style="opacity:.3">' + '♥'.repeat(3 - S.lives) + '</span></span><span class="chip">' + m + ':' + String(s % 60).padStart(2, '0') + '</span>');
+    api.hud('<span class="chip lives" aria-label="' + T(S.lives + ' lives') + '">' + '♥'.repeat(S.lives) + '<span style="opacity:.3">' + '♥'.repeat(3 - S.lives) + '</span></span><span class="chip">' + m + ':' + String(s % 60).padStart(2, '0') + '</span>');
   }
 
   const game = {

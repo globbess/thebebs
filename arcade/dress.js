@@ -6,6 +6,7 @@
 
 (() => {
   'use strict';
+  const T = s => (window.tr ? window.tr(s) : s), TV = (s, v) => (window.tr ? window.tr(s, v) : s.replace(/\{(\w+)\}/g, (m, n) => v[n]));   // lang.js
   const D = window.Dots;
   const WHO = ['andrea', 'lonis'];
   const NAME = { andrea: 'Andrea', lonis: 'Lonis' };
@@ -114,21 +115,21 @@
     const who = S.who, drawers = DRAWERS[who], d = drawers[S.drawer[who]] || drawers[0];
     const items = Closet.items(who).filter(it => !it.hidden && d[1].indexOf(it.cat) >= 0);
     api.panel.innerHTML =
-      '<div class="dz-top"><div class="dz-who" role="group" aria-label="Whose wardrobe">' + WHO.map(w => '<button type="button" class="chip" data-who="' + w + '" aria-pressed="' + (w === who) + '">' + NAME[w] + '</button>').join('') + '</div>' +
+      '<div class="dz-top"><div class="dz-who" role="group" aria-label="' + T('Whose wardrobe') + '">' + WHO.map(w => '<button type="button" class="chip" data-who="' + w + '" aria-pressed="' + (w === who) + '">' + T(NAME[w]) + '</button>').join('') + '</div>' +
       '<div class="dz-acts">' +
-        '<button type="button" class="chip round" data-act="wedding" aria-label="Wedding day" title="Wedding day">' + ICON.rings + '</button>' +
-        '<button type="button" class="chip round" data-act="shuffle" aria-label="Shuffle" title="Shuffle">' + ICON.shuffle + '</button>' +
-        '<button type="button" class="chip round" data-act="reset" aria-label="Start over" title="Start over">' + ICON.reset + '</button>' +
+        '<button type="button" class="chip round" data-act="wedding" aria-label="' + T('Wedding day') + '" title="' + T('Wedding day') + '">' + ICON.rings + '</button>' +
+        '<button type="button" class="chip round" data-act="shuffle" aria-label="' + T('Shuffle') + '" title="' + T('Shuffle') + '">' + ICON.shuffle + '</button>' +
+        '<button type="button" class="chip round" data-act="reset" aria-label="' + T('Start over') + '" title="' + T('Start over') + '">' + ICON.reset + '</button>' +
       '</div></div>' +
-      '<div class="dz-drawers" role="tablist">' + drawers.map((dr, i) => '<button type="button" class="chip" role="tab" data-drawer="' + i + '" aria-selected="' + (dr === d) + '">' + dr[0] + '</button>').join('') + '</div>' +
-      '<div class="dz-items" role="list" aria-label="Drag a piece onto ' + NAME[who] + ', or tap it"></div>';
+      '<div class="dz-drawers" role="tablist">' + drawers.map((dr, i) => '<button type="button" class="chip" role="tab" data-drawer="' + i + '" aria-selected="' + (dr === d) + '">' + T(dr[0]) + '</button>').join('') + '</div>' +
+      '<div class="dz-items" role="list" aria-label="' + TV('Drag a piece onto {name}, or tap it', { name: T(NAME[who]) }) + '"></div>';
     const list = api.panel.querySelector('.dz-items');
     items.forEach(it => {
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'dz-item'; b.dataset.id = it.id; b.setAttribute('role', 'listitem');
       b.setAttribute('aria-pressed', String(S.fit[who][it.cat] === it.id));
       b.appendChild(thumb(it.id));
-      const n = document.createElement('span'); n.textContent = it.name; b.appendChild(n);
+      const n = document.createElement('span'); n.textContent = T(it.name); b.appendChild(n);
       list.appendChild(b);
     });
   }

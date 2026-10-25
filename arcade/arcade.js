@@ -8,6 +8,7 @@
   const D = window.Dots, $ = s => document.querySelector(s);
   const root = document.documentElement;
   const games = [];
+  const T = s => (window.tr ? window.tr(s) : s), TV = (s, v) => (window.tr ? window.tr(s, v) : s.replace(/\{(\w+)\}/g, (m, n) => v[n]));   // lang.js
   const Arcade = window.Arcade = { games, add: g => games.push(g), current: () => cur && cur.api };   // current: the game being played (for checking)
   const ART = window.ART_EMBED;
 
@@ -138,24 +139,24 @@
   const thumbs = [];
   function bestText(def) {
     const top = window.HiScores && HiScores.board(def.id)[0];
-    if (top) return '★ ' + top[0] + ' · ' + (def.fmt ? def.fmt(top[1]) : top[1]);     // the high score, everyone's
+    if (top) return '★ ' + top[0] + ' · ' + T(def.fmt ? def.fmt(top[1]) : top[1]);     // the high score, everyone's
     const b = getBest(def.id);
-    return typeof b !== 'number' ? '' : 'your best ' + (def.fmt ? def.fmt(b) : b);   // games without a score show nothing
+    return typeof b !== 'number' ? '' : TV('your best {v}', { v: T(def.fmt ? def.fmt(b) : b) });   // games without a score show nothing
   }
 
   /* ---------- high scores: the top 10, and your name on it when you make it (hiscores.js) ---------- */
   let hsId = 0;
   function hiscoreBlock(def, score) {
     const box = document.createElement('div'); box.className = 'hs';
-    const head = document.createElement('p'); head.className = 'hs-title'; head.textContent = 'High scores';
+    const head = document.createElement('p'); head.className = 'hs-title'; head.textContent = T('High scores');
     const ol = document.createElement('ol'); ol.className = 'hs-list';
     box.append(head, ol);
-    const fmt = v => (def.fmt ? def.fmt(v) : String(v));
+    const fmt = v => T(def.fmt ? def.fmt(v) : String(v));
     const draw = mine => {
       ol.innerHTML = '';
       const b = HiScores.board(def.id);
       let marked = false;
-      if (!b.length) { const li = document.createElement('li'); li.className = 'hs-empty'; li.textContent = 'No scores yet. Be the first!'; ol.appendChild(li); }
+      if (!b.length) { const li = document.createElement('li'); li.className = 'hs-empty'; li.textContent = T('No scores yet. Be the first!'); ol.appendChild(li); }
       b.forEach(([n, s]) => {
         const li = document.createElement('li');
         const nn = document.createElement('span'); nn.className = 'hs-n'; nn.textContent = n;
@@ -171,19 +172,20 @@
       if (score == null || !HiScores.qualifies(def.id, score)) return;
       const id = 'hs-name-' + (++hsId);
       const f = document.createElement('form'); f.className = 'hs-form';
-      f.innerHTML = '<label class="hs-new" for="' + id + '">New high score! Your name</label>' +
-        '<div class="hs-row"><input id="' + id + '" type="text" maxlength="12" autocomplete="nickname" enterkeyhint="done" spellcheck="false"><button type="submit" class="btn">Save</button></div>' +
+      f.innerHTML = '<label class="hs-new" for="' + id + '"></label>' +
+        '<div class="hs-row"><input id="' + id + '" type="text" maxlength="12" autocomplete="nickname" enterkeyhint="done" spellcheck="false"><button type="submit" class="btn"></button></div>' +
         '<p class="hs-msg" aria-live="polite"></p>';
       const inp = f.querySelector('input'), btn = f.querySelector('button'), msg = f.querySelector('.hs-msg');
+      f.querySelector('label').textContent = T('New high score! Your name'); btn.textContent = T('Save');
       inp.value = HiScores.lastName();
       ['keydown', 'keyup'].forEach(t => inp.addEventListener(t, e => e.stopPropagation()));   // typing isn't playing
       f.addEventListener('submit', e => {
         e.preventDefault();
         const nm = HiScores.clean(inp.value);
-        if (!nm) { msg.textContent = inp.value.trim() ? 'Try another name' : 'Type your name first'; return; }
-        btn.disabled = true; msg.textContent = 'Saving…';
+        if (!nm) { msg.textContent = T(inp.value.trim() ? 'Try another name' : 'Type your name first'); return; }
+        btn.disabled = true; msg.textContent = T('Saving…');
         HiScores.submit(def.id, nm, score).then(() => { f.remove(); draw([nm, score]); drawThumbs(); })
-          .catch(() => { btn.disabled = false; msg.textContent = 'Couldn’t save it. Try again?'; });
+          .catch(() => { btn.disabled = false; msg.textContent = T('Couldn’t save it. Try again?'); });
       });
       box.insertBefore(f, head);
     });
@@ -196,12 +198,12 @@
       const li = document.createElement('li');
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'game-card';
-      b.setAttribute('aria-label', def.name + '. ' + def.blurb);
+      b.setAttribute('aria-label', T(def.name) + '. ' + T(def.blurb));
       const cv = document.createElement('canvas');
       cv.setAttribute('aria-hidden', 'true');
-      const nm = document.createElement('span'); nm.className = 'name'; nm.textContent = def.name;
-      const bl = document.createElement('span'); bl.className = 'blurb'; bl.textContent = def.blurb;
-      const be = document.createElement('span'); be.className = 'best'; be.textContent = def.soon ? 'Coming soon' : bestText(def);
+      const nm = document.createElement('span'); nm.className = 'name'; nm.textContent = T(def.name);
+      const bl = document.createElement('span'); bl.className = 'blurb'; bl.textContent = T(def.blurb);
+      const be = document.createElement('span'); be.className = 'best'; be.textContent = def.soon ? T('Coming soon') : bestText(def);
       b.append(cv, nm, bl, be);
       if (def.soon) {                                   // not playable yet: it just wiggles
         b.classList.add('soon'); b.setAttribute('aria-disabled', 'true');
@@ -235,7 +237,7 @@
       if (th.def.thumbBackdrop !== false) thumbBackdrop(th.st.g, th.st.w, th.st.h, th.def);
       th.def.thumb(th.st.g, th.st.w, th.st.h, 1200);
       th.st.render();
-      th.be.textContent = th.def.soon ? 'Coming soon' : bestText(th.def);
+      th.be.textContent = th.def.soon ? T('Coming soon') : bestText(th.def);
     });
   }
 
@@ -254,7 +256,7 @@
       toast(text, x, y, cls, ms) {
         const n = document.createElement('div');
         n.className = 'toast' + (cls ? ' ' + cls : '');
-        n.textContent = text;
+        n.textContent = T(text);
         n.style.left = D.clamp(x / st.w, 0.12, 0.88) * 100 + '%';
         n.style.top = D.clamp(y / st.h, 0.12, 0.92) * 100 + '%';
         if (ms) n.style.animationDuration = ms / 1000 + 's';
@@ -272,16 +274,16 @@
         c.className = 'over-card';
         c.setAttribute('role', 'dialog');
         c.innerHTML = (o.kicker ? '<p class="kicker"></p>' : '') + '<h2></h2>' + (o.text ? '<p class="txt"></p>' : '') + (o.score ? '<p class="score"></p>' : '') + '<div class="btns"></div>';
-        if (o.kicker) c.querySelector('.kicker').textContent = o.kicker;
-        c.querySelector('h2').textContent = o.title;
-        if (o.text) c.querySelector('.txt').textContent = o.text;
+        if (o.kicker) c.querySelector('.kicker').textContent = T(o.kicker);
+        c.querySelector('h2').textContent = T(o.title);
+        if (o.text) c.querySelector('.txt').textContent = T(o.text);
         if (o.score) c.querySelector('.score').textContent = o.score;
         const bw = c.querySelector('.btns');
         if (o.extra) c.insertBefore(o.extra, bw);
         (o.buttons || []).forEach((bt, i) => {
           const b = document.createElement('button');
           b.type = 'button'; b.className = 'btn' + (bt.quiet ? ' quiet' : '');
-          b.textContent = bt.label;
+          b.textContent = T(bt.label);
           b.addEventListener('click', e => { e.stopPropagation(); bt.on(); });
           bw.appendChild(b);
           if (i === 0) setTimeout(() => b.focus({ preventScroll: true }), 60);
@@ -301,12 +303,12 @@
       end(o) {
         if (api.ended) return;
         api.ended = true;          // the game keeps playing its little ending until the card appears
-        let line = o.scoreText || '';
+        let line = T(o.scoreText || '');
         if (o.score != null) {
           const prev = getBest(def.id);
           const better = def.better === 'low' ? prev == null || o.score < prev : prev == null || o.score > prev;
-          if (better && o.counts !== false) { putBest(def.id, o.score); line += (line ? ' · ' : '') + (prev == null ? 'first score' : 'new best'); }
-          else if (prev != null) line += (line ? ' · ' : '') + 'best ' + (def.fmt ? def.fmt(prev) : prev);
+          if (better && o.counts !== false) { putBest(def.id, o.score); line += (line ? ' · ' : '') + T(prev == null ? 'first score' : 'new best'); }
+          else if (prev != null) line += (line ? ' · ' : '') + TV('best {v}', { v: T(def.fmt ? def.fmt(prev) : prev) });
         }
         setTimeout(() => {
           if (!cur || cur.api !== api) return;
@@ -334,7 +336,7 @@
     if (cur) close(true);
     play.hidden = false;
     root.classList.add('playing');
-    $('#play-title').textContent = def.name;
+    $('#play-title').textContent = T(def.name);
     hudEl.innerHTML = ''; stripEl.innerHTML = ''; panelEl.innerHTML = '';
     play.classList.toggle('has-panel', !!def.panel);
     play.classList.toggle('panel-side', !!def.panelSide);

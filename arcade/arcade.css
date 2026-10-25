@@ -445,3 +445,10 @@ button:focus-visible, a:focus-visible{ outline: 2px solid var(--accent); outline
 .game-card.wiggle{ animation: wiggle .5s ease-in-out; }
 @keyframes wiggle{ 20%{ transform: rotate(-3deg); } 45%{ transform: rotate(3deg); } 70%{ transform: rotate(-2deg); } 100%{ transform: none; } }
 .games .game-card.soon .best{ display: block; }   /* its 'Coming soon' shows on wide screens too */
+
+/* ---------- the language switch in the top bar ---------- */
+.topbar-right{ display: flex; align-items: center; gap: 8px; }
+.lang-mini{ gap: 0; padding: 2px 6px; }
+.lang-mini button{ font: inherit; font-size: 11px; letter-spacing: .1em; color: var(--ink-dim); background: none; border: 0; padding: 7px 6px 5px; cursor: pointer; border-bottom: 1px solid transparent; }
+.lang-mini button:hover{ color: var(--ink); }
+.lang-mini button[aria-pressed="true"]{ color: var(--ink); border-bottom-color: var(--accent); }

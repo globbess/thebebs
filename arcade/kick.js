@@ -4,6 +4,7 @@
 
 (() => {
   'use strict';
+  const T = s => (window.tr ? window.tr(s) : s);   // lang.js
   const D = window.Dots, { rgb, rgba, PAL, hash, lerp, clamp } = D;
   const FLIGHT = 0.55;
   let S = null;
@@ -77,7 +78,7 @@
 
   const goalsText = v => v + (v === 1 ? ' goal' : ' goals');
   function kicksHud(api) {
-    api.hud('<span class="chip" aria-live="polite">⚽ ' + goalsText(S.goals) + '</span>');
+    api.hud('<span class="chip" aria-live="polite">⚽ ' + T(goalsText(S.goals)) + '</span>');
   }
 
   function fresh() { return { n: 0, res: [], goals: 0, phase: 'aim', shot: null, keeper: { x: 0, rot: 0, tx: 0, pose: 'out', face: 'grin' }, swipe: null, trail: [], msgT: 0, bulge: null, react: null }; }

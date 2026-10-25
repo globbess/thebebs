@@ -4,6 +4,7 @@
 
 (() => {
   'use strict';
+  const T = s => (window.tr ? window.tr(s) : s);   // lang.js
   const D = window.Dots, { rgb, rgba, PAL, hash } = D;
 
   const LEVELS = [
@@ -13,6 +14,10 @@
   ];
   const LEVEL_T = 20;           // seconds per place
   const ROSAS_T = 7;            // and the last stretch, through the countryside to the finish
+  const TR = 1.8;               // seconds a change of place takes: the next place sweeps in from the right
+  // the little plane that flies them on (Roatán → San Francisco → Stockholm)
+  const PLANE = { rows: ['....##.......', '....###......', '#...####.....', '#############', '.############', '....###......', '....##.......'],
+    map: { '#': [250, 248, 255] } };
   const GRAV = 470, JUMP = 175, JUMP2 = 150;
   // the things on the road are drawn two dots to a pixel, with a dark line round them, so they read
   const SC = 2, INSET = 2, EDGE = [22, 12, 34];
@@ -334,10 +339,10 @@
   }
 
   function hudAll(api) {
-    api.hud('<span class="chip lives" aria-label="' + S.lives + ' lives">' + '♥'.repeat(Math.max(0, S.lives)) + '<span style="opacity:.3">' + '♥'.repeat(3 - Math.max(0, S.lives)) + '</span></span><span class="chip">♡ ' + S.hearts + '</span>');
+    api.hud('<span class="chip lives" aria-label="' + T(S.lives + ' lives') + '">' + '♥'.repeat(Math.max(0, S.lives)) + '<span style="opacity:.3">' + '♥'.repeat(3 - Math.max(0, S.lives)) + '</span></span><span class="chip">♡ ' + S.hearts + '</span>');
   }
   function stripAll(api) {
-    api.strip.innerHTML = LEVELS.map((l, i) => '<span class="tick' + (i <= S.lv ? ' on' : '') + '"><span class="box">' + (i < S.lv || S.done ? '✓' : '') + '</span>' + l.name + '</span>').join('') + '<span class="tick' + (S.done ? ' on' : '') + '"><span class="box">' + (S.done ? '✓' : '') + '</span>Rösås</span>';
+    api.strip.innerHTML = LEVELS.map((l, i) => '<span class="tick' + (i <= S.lv ? ' on' : '') + '"><span class="box">' + (i < S.lv || S.done ? '✓' : '') + '</span>' + T(l.name) + '</span>').join('') + '<span class="tick' + (S.done ? ' on' : '') + '"><span class="box">' + (S.done ? '✓' : '') + '</span>Rösås</span>';
   }
 
   function jump(api) {
@@ -363,7 +368,7 @@
     blurb: 'Make it in time for the wedding.',
     how: 'From the island to the wedding, one stop at a time. Make it through one and the next unlocks. Tap to jump, tap again in the air to jump higher. Collect hearts, dodge everything else. Three lives.',
     better: 'high', disco: false, thumbScene: 0.7,
-    sceneAt: () => S ? LEVELS[S.lv].p : LEVELS[0].p,
+    sceneAt: () => !S ? LEVELS[0].p : S.trans && S.trans.to < 3 ? LEVELS[S.trans.from].p + (LEVELS[S.trans.to].p - LEVELS[S.trans.from].p) * D.smooth(Math.min(1, S.trans.t / TR)) : LEVELS[S.lv].p,
     fmt: v => v + ' ♡',
 
     thumb(g, w, h, t) {
@@ -385,11 +390,13 @@
       S.t += dt;
       const lv = Math.min(2, Math.floor(S.t / LEVEL_T));
       if (lv !== S.lv) {
+        S.trans = { from: S.lv, to: lv, t: 0 };
         S.lv = lv; S.fade = 1; api.toast('Welcome to ' + LEVELS[lv].name, w * 0.5, h * 0.3, 'big warm sign', 2800); stripAll(api);
         const ride = ['', 'Matte black Tesla Roadster unlocked', 'Voi scooter unlocked'][lv];   // the surprise
         if (ride) setTimeout(() => { if (S && S.lv === lv && api.running) api.toast('🔓 ' + ride, w * 0.5, h * 0.42, 'big unlock sign', 6000); }, 1100);
       }
       S.fade = Math.max(0, S.fade - dt * 0.8);
+      if (S.trans && (S.trans.t += dt) >= TR) S.trans = null;
       const speed = (S.done ? 0 : LEVELS[S.lv].speed + (S.t % LEVEL_T) * 0.25) * Math.max(1, w / 72);
       S.scroll += speed * dt;
 
@@ -399,7 +406,7 @@
       // the road ahead
       const finishing = S.t >= LEVEL_T * 3;
       if (!finishing) {
-        S.next -= speed * dt;
+        if (!S.trans) S.next -= speed * dt;
         if (S.next <= 0) {
           const kinds = LEVELS[S.lv].kinds;
           const k = kinds[(Math.random() * kinds.length) | 0];
@@ -411,7 +418,7 @@
           S.next = 52 + Math.random() * 46 + speed * 0.4 + spr.rows[0].length * SC + (k === 'robotaxi' ? 22 : 0);
         }
       } else if (!S.arrive) {                                          // a little stretch of countryside first
-        S.arrive = { x: w + 30 + w * 3, at: S.t + ROSAS_T }; api.toast('Welcome to Rösås', w * 0.5, h * 0.3, 'big warm sign', 2800);
+        S.arrive = { x: w + 30 + w * 3, at: S.t + ROSAS_T }; S.trans = { from: 2, to: 3, t: 0 }; api.toast('Welcome to Rösås', w * 0.5, h * 0.3, 'big warm sign', 2800);
         setTimeout(() => { if (S && S.arrive && !S.done && api.running) api.toast('🔓 Farm tractor unlocked', w * 0.5, h * 0.42, 'big unlock sign', 6000); }, 1100);
       }
 
@@ -453,7 +460,12 @@
 
     draw(api, now) {
       const g = api.st.g, w = api.st.w, h = api.st.h, gy = Math.round(h * 0.8), u = h / 112;
-      placeScene(g, w, h, S.t >= LEVEL_T * 3 ? 3 : S.lv, S.scroll, now);
+      const here = S.t >= LEVEL_T * 3 ? 3 : S.lv, T = S.trans;
+      const k = T ? D.smooth(Math.min(1, T.t / TR)) : 1, seam = Math.round(w * (1 - k));
+      if (T && seam > 0) {
+        g.save(); g.beginPath(); g.rect(0, 0, seam, h); g.clip(); placeScene(g, w, h, T.from, S.scroll, now); g.restore();
+        g.save(); g.beginPath(); g.rect(seam, 0, w - seam, h); g.clip(); placeScene(g, w, h, T.to, S.scroll, now); g.restore();
+      } else placeScene(g, w, h, here, S.scroll, now);
       if (S.arrive) {
         arch(g, S.arrive.x, gy, h, now);
         const hop = S.done ? Math.abs(Math.sin(now * 0.012)) * 4 : 0;          // so happy to see you
@@ -468,8 +480,9 @@
       }
       const px = Math.round(w * 0.24), feet = gy + S.y;
       const blink = S.t - S.hit < 1.4 && Math.floor(S.t * 12) % 2 === 0 && api.running;
-      if (S.lv === 1 && !S.onGround) thrusters(g, px + u, feet, gy, u, now);   // the Roadster's cold-air jets
-      if (!blink && S.lv === 1) {                                     // San Francisco: in the Roadster
+      const ride = T && seam > px ? T.from : here;                    // they change rides as the new place reaches them
+      if (ride === 1 && !S.onGround) thrusters(g, px + u, feet, gy, u, now);   // the Roadster's cold-air jets
+      if (!blink && ride === 1) {                                     // San Francisco: in the Roadster
         const car = roadster(g, px + u, feet, u);
         const seat = feet + 6 * u;                                     // sitting low: from the waist up shows
         // Andrea drives (her side is the one we see), Lonis in the passenger seat beside her
@@ -478,11 +491,11 @@
         g.fillRect(Math.round(px + 5.2 * u), Math.round(car.top - 3.2 * u), 2, 1);
         Bebs.lonis(g, px - 2 * u, seat, u, { pose: 'stand', t: now / 1000, cut: (seat - car.top - u) / (28 * u) });
         Bebs.andrea(g, px + 1.5 * u, seat, u, { pose: 'stand', t: now / 1000, cut: (seat - car.top - u) / (24 * u) });
-      } else if (!blink && S.lv === 2 && S.t < LEVEL_T * 3) {          // Stockholm: both on one pink Voi
+      } else if (!blink && ride === 2 && !S.done) {                    // Stockholm: both on one pink Voi
         const sc = voi(g, px + u, feet, u);
         Bebs.andrea(g, px - 3.5 * u, sc.feet, u, { pose: 'stand', t: now / 1000 });   // holding on behind him
         Bebs.lonis(g, px + 2.5 * u, sc.feet, u, { pose: 'stand', t: now / 1000 });    // Lonis drives
-      } else if (!blink && S.t >= LEVEL_T * 3 && !S.done) {             // Rösås: the red tractor, Lonis driving
+      } else if (!blink && ride === 3 && !S.done) {                    // Rösås: the red tractor, Lonis driving
         const tr = tractor(g, px + 17 * u, feet, u, now);
         Bebs.andrea(g, tr.x(-5), tr.plank, u, { pose: 'stand', t: now / 1000 });                            // on the little trailer
         const hip = tr.seat + 14 * u;                                                                         // sitting: from the waist up
@@ -492,6 +505,28 @@
         const pose = S.done ? 'hold' : air ? 'jump' : 'run';
         Bebs.andrea(g, px - 4 * u, feet, u, { pose, phase: ph, t: now / 1000, face: S.done ? 'grin' : 'smile', fit: { top: 'crop-white', bottom: 'lowrise' } });
         Bebs.lonis(g, px + 5 * u, feet, u, { pose: S.done ? 'hold' : pose, phase: ph + Math.PI, t: now / 1000, face: 'grin', flip: S.done, fit: S.lv === 0 ? { top: 'white', bottom: 'shorts' } : {} });
+      }
+      if (T) {
+        // the seam: a curtain of sparkles sweeping across
+        const glow = Math.sin(k * Math.PI);
+        for (let y = 0; y < h; y += 2) {
+          const x = seam + Math.sin(y * 0.35 + now * 0.012) * 2.5;
+          g.fillStyle = rgba(y % 6 === 0 ? [255, 214, 120] : y % 6 === 2 ? [255, 160, 200] : [255, 255, 255], 0.9 * glow);
+          g.fillRect(Math.round(x), y, 2, 1);
+        }
+        // as it reaches them: a puff of sparkles round the two of them (the new ride appears)
+        const near = 1 - Math.abs(seam - px) / (w * 0.14);
+        if (near > 0) for (let i = 0; i < 16; i++) {
+          const an = i / 16 * D.TAU + now * 0.004, rr = (10 + (1 - near) * 10) * u;
+          g.fillStyle = rgba(i % 2 ? [255, 255, 255] : [255, 214, 120], near);
+          g.fillRect(Math.round(px + Math.cos(an) * rr), Math.round(feet - 14 * u + Math.sin(an) * rr * 0.8), 2, 2);
+        }
+        // flying on: a little plane crossing the sky, with its trail
+        if (T.to === 1 || T.to === 2) {
+          const ppx = -30 + k * (w + 60), ppy = h * 0.18 - Math.sin(k * Math.PI) * h * 0.05;
+          for (let i = 1; i < 18; i++) { g.fillStyle = rgba([255, 255, 255], 0.5 * (1 - i / 18)); g.fillRect(Math.round(ppx - i * 3), Math.round(ppy + 7 + i * 0.25), 2, 1); }
+          spriteBig(g, PLANE.rows, ppx - 13, ppy, PLANE.map, false, 2);
+        }
       }
     },
 

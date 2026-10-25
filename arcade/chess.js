@@ -5,6 +5,7 @@
 
 (() => {
   'use strict';
+  const T = s => (window.tr ? window.tr(s) : s);   // lang.js
   const D = window.Dots, { rgb, rgba, PAL, mix } = D;
   const SQ = 12;
   const SPR = {
@@ -112,7 +113,7 @@
 
   /* ---------- the two sides: a little portrait, what they say, what they've taken ---------- */
   function sideHtml(who) {
-    return '<div class="side" data-side="' + who + '"><canvas width="44" height="44" aria-hidden="true"></canvas><div class="who"><div class="nm">' + (who === 'a' ? 'Team Andrea' : 'Team Lonis') + '</div><div class="say" aria-live="polite"></div></div><div class="caps" aria-label="Captured pieces"></div></div>';
+    return '<div class="side" data-side="' + who + '"><canvas width="44" height="44" aria-hidden="true"></canvas><div class="who"><div class="nm">' + T(who === 'a' ? 'Team Andrea' : 'Team Lonis') + '</div><div class="say" aria-live="polite"></div></div><div class="caps" aria-label="Captured pieces"></div></div>';
   }
   // a little round portrait: the face from each doll (bebs.js's pictures)
   const FACE = { a: { src: 'andrea.png?v=3', x: 53, y: 22, s: 96 }, l: { src: 'lonis.png?v=3', x: 128, y: 30, s: 96 } };
@@ -136,7 +137,7 @@
       const el = S.sideEl[who];
       if (!el) return;
       el.classList.toggle('turn', team(S.st.turn) === who && !S.over);
-      el.querySelector('.say').textContent = S.say[who] || '';
+      el.querySelector('.say').textContent = T(S.say[who] || '');
       // what this side has captured
       const taken = S.taken[who].slice().sort((x, y) => VAL[y] - VAL[x]);
       el.querySelector('.caps').textContent = taken.map(p => GLYPH[p]).join('');
@@ -158,16 +159,16 @@
     const bot = sides(api);
     const ai = S.mode === 'ai';
     api.panel.innerHTML = '<div class="chess-wrap">' + sideHtml(bot) +
-      '<div class="chess-opts" role="group" aria-label="Who plays">' +
-        '<button type="button" class="chip" data-mode="ai" aria-pressed="' + ai + '">vs Lonis</button>' +
-        '<button type="button" class="chip" data-mode="two" aria-pressed="' + !ai + '">Two players</button></div>' +
-      (ai ? '<div class="chess-opts" role="group" aria-label="Your team">' +
-        '<button type="button" class="chip" data-me="w" aria-pressed="' + (S.me === 'w') + '">I’m Team Andrea</button>' +
-        '<button type="button" class="chip" data-me="b" aria-pressed="' + (S.me === 'b') + '">I’m Team Lonis</button></div>' +
-        '<div class="chess-opts" role="group" aria-label="How hard">' +
-        '<button type="button" class="chip" data-lvl="easy" aria-pressed="' + (S.lvl === 'easy') + '">Easy</button>' +
-        '<button type="button" class="chip" data-lvl="serious" aria-pressed="' + (S.lvl === 'serious') + '">Serious</button></div>' : '') +
-      '<div class="row-btns"><button type="button" class="btn" data-act="new">New game</button><button type="button" class="btn quiet" data-act="undo">Undo</button></div></div>';
+      '<div class="chess-opts" role="group" aria-label="' + T('Who plays') + '">' +
+        '<button type="button" class="chip" data-mode="ai" aria-pressed="' + ai + '">' + T('vs Lonis') + '</button>' +
+        '<button type="button" class="chip" data-mode="two" aria-pressed="' + !ai + '">' + T('Two players') + '</button></div>' +
+      (ai ? '<div class="chess-opts" role="group" aria-label="' + T('Your team') + '">' +
+        '<button type="button" class="chip" data-me="w" aria-pressed="' + (S.me === 'w') + '">' + T('I’m Team Andrea') + '</button>' +
+        '<button type="button" class="chip" data-me="b" aria-pressed="' + (S.me === 'b') + '">' + T('I’m Team Lonis') + '</button></div>' +
+        '<div class="chess-opts" role="group" aria-label="' + T('How hard') + '">' +
+        '<button type="button" class="chip" data-lvl="easy" aria-pressed="' + (S.lvl === 'easy') + '">' + T('Easy') + '</button>' +
+        '<button type="button" class="chip" data-lvl="serious" aria-pressed="' + (S.lvl === 'serious') + '">' + T('Serious') + '</button></div>' : '') +
+      '<div class="row-btns"><button type="button" class="btn" data-act="new">' + T('New game') + '</button><button type="button" class="btn quiet" data-act="undo">' + T('Undo') + '</button></div></div>';
     S.sideEl[bot] = api.panel.querySelector('.side');
     S.sideEl.a && (S.sideEl.a._face = null); S.sideEl.l && (S.sideEl.l._face = null);
     refreshSides();
@@ -219,7 +220,7 @@
       api.end({ kicker: 'Bebchess', title, text, score: moves, scoreText: 'checkmate in ' + moves + ' moves', again: 'New game', delay: 900 });
       return;
     }
-    if (status.result === 'checkmate' && S.mode === 'ai' && status.winner === S.me) text += ' Beat him on Serious to get on the high scores.';
+    if (status.result === 'checkmate' && S.mode === 'ai' && status.winner === S.me) text = T(text) + ' ' + T('Beat him on Serious to get on the high scores.');
     setTimeout(() => { if (S && S.over) api.card({ kicker: 'Bebchess', title, text, buttons: [{ label: 'New game', on: () => newGame(api) }, { label: 'See the board', quiet: true, on: () => api.uncard() }] }); }, 900);
   }
 
@@ -259,7 +260,7 @@
 
     setup(api) {
       S = null;
-      if (!E()) { api.panel.innerHTML = '<p class="foot">The chess rules didn’t load. Reload the page to try again.</p>'; return; }
+      if (!E()) { api.panel.innerHTML = '<p class="foot">' + T('The chess rules didn’t load. Reload the page to try again.') + '</p>'; return; }
       S = { me: 'w', mode: 'ai', lvl: 'easy', token: 0 };
       newGame(api);
       api.panel.onclick = e => {
