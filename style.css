@@ -108,24 +108,6 @@ body{
   border-bottom: 1px solid transparent;
 }
 .lang button:hover{ color: var(--ink); }
-/* under the languages: the way into the arcade, a word pill like theirs */
-.corner{ flex-wrap: wrap; }
-.corner-br{ flex-basis: 100%; height: 0; }
-.arcade-pill{
-  padding: 8px 13px 7px;
-  font-family: var(--font); font-size: 12px; letter-spacing: .10em; text-transform: uppercase;
-  color: var(--ink); text-decoration: none;
-  background: rgba(var(--chip-rgb),.62);
-  border: 1px solid rgba(var(--line-rgb),.3); border-radius: 999px;
-  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
-  transition: background .2s, border-color .2s;
-}
-.arcade-pill:hover{ background: rgba(var(--hover-rgb),.8); border-color: var(--accent); }
-.arcade-pill:focus-visible{ outline: 1px solid var(--accent); outline-offset: 2px; }
-/* it lights up once someone has found all 15 photos */
-.arcade-pill.is-lit{ border-color: var(--accent); box-shadow: 0 0 0 2px rgba(var(--accent-rgb),.25), 0 0 16px rgba(var(--accent-rgb),.7); animation: arcade-glow 2.4s ease-in-out infinite; }
-@keyframes arcade-glow{ 50%{ box-shadow: 0 0 0 3px rgba(var(--accent-rgb),.35), 0 0 26px rgba(var(--accent-rgb),.95); } }
-@media (prefers-reduced-motion: reduce){ .arcade-pill.is-lit{ animation: none; } }
 .lang button[aria-pressed="true"]{ color: var(--ink); border-bottom-color: var(--accent); }
 .lang button:focus-visible{ outline: 1px solid var(--accent); outline-offset: 2px; }
 
@@ -771,6 +753,36 @@ html:has(.rsvp-card[open]), html:has(.lightbox[open]), html:has(.gallery[open]){
 
 .hero .rsvp-open{ margin: 0; }
 
+/* RSVP and, beside it, the way into the arcade: the same height, but outlined and quieter
+   (side by side, or one under the other on a narrow phone) */
+.hero-btns{ display: flex; flex-wrap: wrap; justify-content: center; align-items: stretch; gap: 12px 14px; }
+.games-btn{
+  display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+  min-height: 44px;
+  padding: 0 26px 0 22px;
+  font: inherit; font-size: 18px;
+  color: var(--ink); text-decoration: none;
+  background: rgba(var(--chip-rgb),.62);
+  border: 1px solid rgba(var(--line-rgb),.6);
+  border-radius: 999px;
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  transition: transform .15s, background .2s, border-color .2s, box-shadow .2s;
+}
+.games-btn .pad{ flex: none; }
+.games-btn:hover{ background: rgba(var(--hover-rgb),.8); border-color: var(--accent); color: var(--ink); }
+.games-btn:active{ transform: translateY(1px); }
+.games-btn:focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
+/* it lights up once someone has found all 15 photos */
+.games-btn.is-lit{ border-color: var(--accent); box-shadow: 0 0 0 2px rgba(var(--accent-rgb),.25), 0 0 16px rgba(var(--accent-rgb),.7); animation: arcade-glow 2.4s ease-in-out infinite; }
+@keyframes arcade-glow{ 50%{ box-shadow: 0 0 0 3px rgba(var(--accent-rgb),.35), 0 0 26px rgba(var(--accent-rgb),.95); } }
+@media (prefers-reduced-motion: reduce){ .games-btn.is-lit{ animation: none; } .games-btn:active{ transform: none; } }
+/* narrow phones: a little less padding, so the two still fit side by side in every language */
+@media (max-width: 400px){
+  .hero-btns{ gap: 12px 10px; }
+  .hero .rsvp-open{ padding-left: 30px; padding-right: 30px; }
+  .games-btn{ padding: 0 20px 0 17px; gap: 8px; }
+}
+
 /* wide screens: the whole group centred in the dark space left of the photo
    (art.js measures that space and sets --dark-w) */
 @media (min-aspect-ratio: 1/1){
@@ -1103,6 +1115,9 @@ html.light .hero h1{ -webkit-text-stroke: 0; }
   background: var(--accent); color: var(--on-accent); border-color: transparent; font-weight: 400; }
 .cal-pill:hover, .cal-yes[open] > .cal-pill{ background: var(--accent-hover); color: var(--on-accent); border-color: transparent; }
 .cal-yes .cal-menu{ position: static; margin: 10px auto 0; width: max-content; min-width: 210px; text-align: left; box-shadow: none; }
+/* under it all, something to do until then: the arcade, in the plain pill */
+.games-pill{ display: inline-flex; align-items: center; gap: 8px; margin: 18px auto 0; padding: 9px 20px 9px 16px; }
+.games-pill .pad{ width: 18px; height: 18px; flex: none; }
 
 /* a story card with two sides (flip.js): a small "Turn over" button under the words;
    the card turns around and the back shows photos and a line */

@@ -42,5 +42,11 @@
     } catch (e) {}
   };
 
+  // a link or button with data-track="Opened: …" counts when it's tapped (the ways into the arcade)
+  document.addEventListener('click', e => {
+    const el = e.target.closest && e.target.closest('[data-track]');
+    if (el) window.track(el.getAttribute('data-track'));
+  });
+
   window.track(window.TRACK_OPEN || 'Site opened');          // the arcade counts as "Opened: Arcade"
 })();

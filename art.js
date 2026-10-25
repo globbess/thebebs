@@ -1160,7 +1160,7 @@
   const roomDim   = () => (LIGHT ? 0.45 : 0.32);   // light mode: towards the blush, so every card looks the same
   const ROOM_PAD = 30, ROOM_FEATHER = 96;   // a wide, gentle fade from the busy art into the calm card
   const TEXT_SEL = 'h1, h2, p, dt, dd, li';
-  const CTRL_SEL = '.pill, .sec button:not(.turn), .acc > summary, .sec figure, .sec .peek';   // buttons, open/close rows and photos sit in the card too (not the folded corner)
+  const CTRL_SEL = '.pill, .games-btn, .sec button:not(.turn), .acc > summary, .sec figure, .sec .peek';   // buttons, open/close rows and photos sit in the card too (not the folded corner)
   const roomSecs = Array.prototype.slice.call(document.querySelectorAll('.sec'));
   const roomRange = document.createRange();
   let room = null;                     // per dot: 1 = full size, smaller behind the words

@@ -108,7 +108,7 @@
         if (window.disco) window.disco();
         if (window.track) window.track('Opened: All 15 found');
         lightArcade();
-        setTimeout(() => whisper(t('arcade.open', 'psst… the arcade just lit up ↖'), true), 7000);
+        setTimeout(() => whisper(t('arcade.open', 'psst… the games button up top just lit up'), true), 7000);
       }, 600);
     } else if (found.length === added) {
       // the very first find: the counter appears, with a wink
