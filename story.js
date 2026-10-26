@@ -1,7 +1,7 @@
 /* The story of us: the full story by default, and one button beside the heading
    that trims it down a step at a time — TL;DR, "Still too long?", the
-   one-liner — and then comes back round to the full story. Big-text readers
-   start on the TL;DR. */
+   one-liner — and then comes back round to the full story. Everyone starts on
+   the full story. */
 
 (() => {
   'use strict';
@@ -65,16 +65,5 @@
     if (!touched && nudge) nudge.classList.add('is-done');
     touched = true;
     show((stage + 1) % versions.length);
-  });
-
-  // big text on a phone (layout.js): open on the TL;DR instead of the long story,
-  // since the full one runs to several screens for them. Only before anyone has
-  // tapped the button; the full story is still in the cycle.
-  document.addEventListener('bigtext', () => {
-    if (touched || stage !== 0 || versions.length < 2) return;
-    versions.forEach((v, i) => { v.hidden = i !== 1; });
-    stage = 1;
-    next.textContent = label(1);
-    document.dispatchEvent(new Event('layoutchange'));
   });
 })();

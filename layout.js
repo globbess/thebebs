@@ -39,9 +39,7 @@
       if (!lines.size) continue;
       const perLine = p.textContent.length / lines.size;
       const big = perLine < BIG_BELOW;
-      const was = document.documentElement.classList.contains('big-text');
       document.documentElement.classList.toggle('big-text', big);
-      if (big && !was) document.dispatchEvent(new Event('bigtext'));   // e.g. the story starts on its TL;DR
       showCheck(big, perLine);
       return;
     }
