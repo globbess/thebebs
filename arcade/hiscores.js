@@ -65,5 +65,5 @@
   }
   const lastName = () => { try { return localStorage.getItem(NAME) || ''; } catch (e) { return ''; } };
 
-  window.HiScores = { load, board: g => (boards && boards[g]) || [], qualifies, submit, clean, lastName, has: g => GAMES.indexOf(g) >= 0, online: ONLINE };
+  window.HiScores = { load, board: g => (boards && boards[g]) || [], qualifies, submit, clean, lastName, has: g => GAMES.indexOf(g) >= 0, loaded: () => !!boards, online: ONLINE };
 })();

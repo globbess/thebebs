@@ -586,5 +586,21 @@ window.ARCADE_SV = {
 "Let’s pretend that didn’t happen 💀": "Vi låtsas att det där aldrig hände 💀",
 "Neither of us? Next, bro.": "Ingen av oss? Nästa, bro.",
 "💀 skip": "💀 skippa",
-"{n} goal in a row": "{n} mål i rad"
+"{n} goal in a row": "{n} mål i rad",
+"Hi scores": "Topplistan",
+"Player": "Spelare",
+"Score": "Poäng",
+"Close": "Stäng",
+"Press start": "Tryck start",
+"Free play": "Gratis spel",
+"★ Log your hi score": "★ Sätt ditt rekord",
+"★ Beat {name}’s {score}": "★ Slå {poss} rekord: {score}",
+"★ The record’s yours · {score}": "★ Rekordet är ditt · {score}",
+"Place": "Plats",
+"Game": "Spel",
+"You?": "Du?",
+"Island": "Ön",
+"Football": "Fotboll",
+"Sun Up": "Solen",
+"Chess": "Schack"
 };

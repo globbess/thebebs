@@ -587,5 +587,21 @@ window.ARCADE_ES = {
 "Neither of us? Next, bro.": "¿Ninguno de los dos? Siguiente, bro.",
 "💀 skip": "💀 paso",
 "Stockholm": "Estocolmo",
-"{n} goal in a row": "{n} gol seguido"
+"{n} goal in a row": "{n} gol seguido",
+"Hi scores": "Récords",
+"Player": "Jugador",
+"Score": "Puntos",
+"Close": "Cerrar",
+"Press start": "Pulsa start",
+"Free play": "Juego libre",
+"★ Log your hi score": "★ Marca tu récord",
+"★ Beat {name}’s {score}": "★ Supera el récord de {name}: {score}",
+"★ The record’s yours · {score}": "★ El récord es tuyo · {score}",
+"Place": "Puesto",
+"Game": "Juego",
+"You?": "¿Tú?",
+"Island": "Isla",
+"Football": "Fútbol",
+"Sun Up": "Sol",
+"Chess": "Ajedrez"
 };

@@ -137,11 +137,16 @@
   /* ---------- the game cards ---------- */
   const list = $('#games');
   const thumbs = [];
+  // on each card, a dare: beat whoever holds the record (or, while nobody does, be the first).
+  // Games without a score (Dress Up) show nothing. Swedish names take an s, unless they end in one.
+  const svPoss = n => (/[sxz]$/i.test(n) ? n : n + 's');
   function bestText(def) {
-    const top = window.HiScores && HiScores.board(def.id)[0];
-    if (top) return '★ ' + top[0] + ' · ' + T(def.fmt ? def.fmt(top[1]) : top[1]);     // the high score, everyone's
-    const b = getBest(def.id);
-    return typeof b !== 'number' ? '' : TV('your best {v}', { v: T(def.fmt ? def.fmt(b) : b) });   // games without a score show nothing
+    if (!window.HiScores || !HiScores.has(def.id) || !HiScores.loaded()) return '';
+    const top = HiScores.board(def.id)[0];
+    if (!top) return T('★ Log your hi score');
+    const score = T(def.fmt ? def.fmt(top[1]) : String(top[1]));
+    if (String(top[0]).toLowerCase() === HiScores.lastName().toLowerCase()) return TV('★ The record’s yours · {score}', { score });
+    return TV('★ Beat {name}’s {score}', { name: top[0], poss: svPoss(top[0]), score });
   }
 
   /* ---------- high scores: the top 10, and your name on it when you make it (hiscores.js) ---------- */
@@ -420,6 +425,51 @@
     api.paused = true;
     api.card({ title: 'Paused', buttons: [{ label: 'Keep playing', on: () => { api.uncard(); api.paused = false; last = performance.now(); } }, { label: 'Arcade', quiet: true, on: () => history.back() }] });
   });
+
+  /* ---------- the hi scores: every game's top 10 in one table, in a pop-up like the screen of an
+     old arcade cabinet. A game nobody has scored on yet gets a row waiting for its first name.
+     Phones show the games by a short name, so the four columns fit. ---------- */
+  const pop = $('#hs-pop');
+  const SHORT = { run: 'Island', kick: 'Football', trivia: 'Trivia', sun: 'Sun Up', chess: 'Chess', list: 'The List' };
+  const popGames = () => ORDER.map(id => games.find(g => g.id === id)).filter(g => g && !g.soon && HiScores.has(g.id));
+  function popDraw() {
+    const body = pop.querySelector('.hs-rows'), me = HiScores.lastName().toLowerCase();
+    const cell = (cls, text) => { const td = document.createElement('td'); td.className = cls; td.textContent = text; return td; };
+    const row = (cls, cells) => { const tr = document.createElement('tr'); tr.className = cls; cells.forEach(c => tr.appendChild(c)); body.appendChild(tr); };
+    body.innerHTML = '';
+    let any = false;
+    popGames().forEach(def => {
+      const game = () => {
+        const td = cell('g', '');
+        const full = document.createElement('span'); full.className = 'full'; full.textContent = T(def.name);
+        const short = document.createElement('span'); short.className = 'short'; short.textContent = T(SHORT[def.id] || def.name);
+        td.append(full, short);
+        return td;
+      };
+      const b = HiScores.board(def.id);
+      if (!b.length) { row('empty first', [cell('r', '1.'), cell('n', T('You?')), game(), cell('s', '- - -')]); return; }
+      any = true;
+      b.forEach(([n, v], i) => {
+        const cls = (i === 0 ? 'top first' : i === 1 ? 'p2' : i === 2 ? 'p3' : '') + (me && String(n).toLowerCase() === me ? ' me' : '');
+        row(cls, [cell('r', (i + 1) + '.'), cell('n', n), game(), cell('s', T(def.fmt ? def.fmt(v) : String(v)))]);
+      });
+    });
+    pop.querySelector('.hs-none').hidden = any;
+  }
+  function popOpen() {
+    popDraw();
+    pop.showModal();
+    HiScores.load().then(() => { if (pop.open) popDraw(); if (!cur) drawThumbs(); });
+    if (window.track) window.track('Opened: Arcade hi scores');
+  }
+  $('#hs-open').addEventListener('click', popOpen);
+  pop.querySelector('.hs-x').addEventListener('click', () => pop.close());
+  // press start: back to the games to pick one (on a phone, down to the cards)
+  pop.querySelector('.hs-start').addEventListener('click', () => {
+    pop.close();
+    if (!around()) list.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+  });
+  pop.addEventListener('click', e => { if (e.target === pop) pop.close(); });       // a tap outside the screen
 
   /* ---------- the address: thebebs.com/arcade/#list opens a game ---------- */
   function go(id) { history.pushState({ game: id }, '', '#' + id); open(id); }
