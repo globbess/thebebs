@@ -426,50 +426,62 @@
     api.card({ title: 'Paused', buttons: [{ label: 'Keep playing', on: () => { api.uncard(); api.paused = false; last = performance.now(); } }, { label: 'Arcade', quiet: true, on: () => history.back() }] });
   });
 
-  /* ---------- the hi scores: every game's top 10 in one table, in a pop-up like the screen of an
-     old arcade cabinet. A game nobody has scored on yet gets a row waiting for its first name.
-     Phones show the games by a short name, so the four columns fit. ---------- */
-  const pop = $('#hs-pop');
-  const SHORT = { run: 'Island', kick: 'Football', trivia: 'Trivia', sun: 'Sun Up', chess: 'Chess', list: 'The List' };
+  /* ---------- the hi scores: a game's top 10 in a pop-up, like the screen of an old arcade cabinet.
+     The arrows (or left and right) go through the games; left alone, it moves on by itself every
+     few seconds, the way the machines do between players. The first empty place says "YOU?", and
+     Press start plays the game on the screen. ---------- */
+  const pop = $('#hs-pop'), popScreen = pop.querySelector('.hs-screen');
+  const still = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let popAt = 0, popTimer = 0;
   const popGames = () => ORDER.map(id => games.find(g => g.id === id)).filter(g => g && !g.soon && HiScores.has(g.id));
-  function popDraw() {
-    const body = pop.querySelector('.hs-rows'), me = HiScores.lastName().toLowerCase();
+  function popDraw(flick) {
+    const def = popGames()[popAt];
+    if (!def) return;
+    pop.querySelector('.hs-gname').textContent = T(def.name);
+    const b = HiScores.board(def.id), me = HiScores.lastName().toLowerCase();
+    const body = pop.querySelector('.hs-rows');
     const cell = (cls, text) => { const td = document.createElement('td'); td.className = cls; td.textContent = text; return td; };
-    const row = (cls, cells) => { const tr = document.createElement('tr'); tr.className = cls; cells.forEach(c => tr.appendChild(c)); body.appendChild(tr); };
     body.innerHTML = '';
-    let any = false;
-    popGames().forEach(def => {
-      const game = () => {
-        const td = cell('g', '');
-        const full = document.createElement('span'); full.className = 'full'; full.textContent = T(def.name);
-        const short = document.createElement('span'); short.className = 'short'; short.textContent = T(SHORT[def.id] || def.name);
-        td.append(full, short);
-        return td;
-      };
-      const b = HiScores.board(def.id);
-      if (!b.length) { row('empty first', [cell('r', '1.'), cell('n', T('You?')), game(), cell('s', '- - -')]); return; }
-      any = true;
-      b.forEach(([n, v], i) => {
-        const cls = (i === 0 ? 'top first' : i === 1 ? 'p2' : i === 2 ? 'p3' : '') + (me && String(n).toLowerCase() === me ? ' me' : '');
-        row(cls, [cell('r', (i + 1) + '.'), cell('n', n), game(), cell('s', T(def.fmt ? def.fmt(v) : String(v)))]);
-      });
-    });
-    pop.querySelector('.hs-none').hidden = any;
+    for (let i = 0; i < 10; i++) {                       // always ten places: the empty ones are room on the board
+      const tr = document.createElement('tr');
+      if (b[i]) {
+        tr.className = (i === 0 ? 'top' : i === 1 ? 'p2' : i === 2 ? 'p3' : '') + (me && String(b[i][0]).toLowerCase() === me ? ' me' : '');
+        tr.append(cell('r', (i + 1) + '.'), cell('n', b[i][0]), cell('s', T(def.fmt ? def.fmt(b[i][1]) : String(b[i][1]))));
+      } else {
+        tr.className = i === b.length ? 'empty you' : 'empty';
+        tr.append(cell('r', (i + 1) + '.'), cell('n', i === b.length ? T('You?') : '- - - - -'), cell('s', '- - -'));
+      }
+      body.appendChild(tr);
+    }
+    pop.querySelector('.hs-none').classList.toggle('on', !b.length);
+    if (flick && !still()) { popScreen.classList.remove('flick'); void popScreen.offsetWidth; popScreen.classList.add('flick'); }
+  }
+  function popStep(d, byHand) {
+    const n = popGames().length;
+    popAt = (popAt + d + n) % n;
+    popDraw(true);
+    if (byHand) clearInterval(popTimer);                 // someone's looking: it stays where they put it
   }
   function popOpen() {
-    popDraw();
+    popAt = Math.max(0, popGames().findIndex(g => HiScores.board(g.id).length));   // the first game anyone has scored on
+    popDraw(false);
     pop.showModal();
-    HiScores.load().then(() => { if (pop.open) popDraw(); if (!cur) drawThumbs(); });
+    HiScores.load().then(() => { if (pop.open) popDraw(false); if (!cur) drawThumbs(); });
+    clearInterval(popTimer);
+    if (!still()) popTimer = setInterval(() => popStep(1), 5500);
     if (window.track) window.track('Opened: Arcade hi scores');
   }
   $('#hs-open').addEventListener('click', popOpen);
+  pop.querySelector('.hs-prev').addEventListener('click', () => popStep(-1, true));
+  pop.querySelector('.hs-next').addEventListener('click', () => popStep(1, true));
   pop.querySelector('.hs-x').addEventListener('click', () => pop.close());
-  // press start: back to the games to pick one (on a phone, down to the cards)
-  pop.querySelector('.hs-start').addEventListener('click', () => {
-    pop.close();
-    if (!around()) list.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
-  });
+  pop.querySelector('.hs-start').addEventListener('click', () => { const def = popGames()[popAt]; pop.close(); if (def) go(def.id); });
   pop.addEventListener('click', e => { if (e.target === pop) pop.close(); });       // a tap outside the screen
+  pop.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft') { e.preventDefault(); popStep(-1, true); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); popStep(1, true); }
+  });
+  pop.addEventListener('close', () => clearInterval(popTimer));
 
   /* ---------- the address: thebebs.com/arcade/#list opens a game ---------- */
   function go(id) { history.pushState({ game: id }, '', '#' + id); open(id); }

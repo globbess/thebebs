@@ -597,10 +597,7 @@ window.ARCADE_SV = {
 "★ Beat {name}’s {score}": "★ Slå {poss} rekord: {score}",
 "★ The record’s yours · {score}": "★ Rekordet är ditt · {score}",
 "Place": "Plats",
-"Game": "Spel",
 "You?": "Du?",
-"Island": "Ön",
-"Football": "Fotboll",
-"Sun Up": "Solen",
-"Chess": "Schack"
+"Previous game": "Förra spelet",
+"Next game": "Nästa spel"
 };

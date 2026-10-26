@@ -18,7 +18,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tiny5&family=Questrial&display=swap">
-<link rel="stylesheet" href="arcade.css?v=24">
+<link rel="stylesheet" href="arcade.css?v=25">
 <script>
   /* light or dark: the guest's choice on thebebs.com if they've made one, otherwise their phone's */
   (function () {
@@ -73,13 +73,16 @@
       <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
     </button>
     <h2 class="hs-big" id="hs-pop-title" data-tr>Hi scores</h2>
-    <div class="hs-wrap">
-      <table class="hs-table">
-        <thead><tr><th class="r"><span class="vh" data-tr>Place</span></th><th class="n" data-tr>Player</th><th class="g" data-tr>Game</th><th class="s" data-tr>Score</th></tr></thead>
-        <tbody class="hs-rows"></tbody>
-      </table>
+    <div class="hs-game">
+      <button class="hs-prev" type="button" aria-label="Previous game" data-tr-aria="Previous game"><svg viewBox="0 0 12 12" width="14" height="14" aria-hidden="true"><path d="M9 1.5v9L2 6z" fill="currentColor"/></svg></button>
+      <p class="hs-gname" aria-live="polite"></p>
+      <button class="hs-next" type="button" aria-label="Next game" data-tr-aria="Next game"><svg viewBox="0 0 12 12" width="14" height="14" aria-hidden="true"><path d="M3 1.5v9L10 6z" fill="currentColor"/></svg></button>
     </div>
-    <p class="hs-none" data-tr hidden>No scores yet. Be the first!</p>
+    <table class="hs-table">
+      <thead><tr><th class="r"><span class="vh" data-tr>Place</span></th><th class="n" data-tr>Player</th><th class="s" data-tr>Score</th></tr></thead>
+      <tbody class="hs-rows"></tbody>
+    </table>
+    <p class="hs-none" data-tr>No scores yet. Be the first!</p>
     <button class="hs-start" type="button" data-tr>Press start</button>
     <p class="hs-free" aria-hidden="true" data-tr>Free play</p>
   </div>
@@ -101,8 +104,8 @@
   <div class="panel" id="panel"></div>
 </section>
 
-<script src="lang-sv.js?v=2"></script>
-<script src="lang-es.js?v=2"></script>
+<script src="lang-sv.js?v=3"></script>
+<script src="lang-es.js?v=3"></script>
 <script src="lang.js?v=1"></script>
 <script src="../art.js?v=117"></script>
 <script>window.TRACK_OPEN = 'Opened: Arcade';</script>
@@ -110,7 +113,7 @@
 <script src="hiscores.js?v=5"></script>
 <script src="dots.js?v=2"></script>
 <script src="bebs.js?v=9"></script>
-<script src="arcade.js?v=28"></script>
+<script src="arcade.js?v=29"></script>
 <script src="list.js?v=11"></script>
 <script src="run.js?v=37"></script>
 <script src="kick.js?v=14"></script>

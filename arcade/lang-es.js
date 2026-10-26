@@ -598,10 +598,7 @@ window.ARCADE_ES = {
 "★ Beat {name}’s {score}": "★ Supera el récord de {name}: {score}",
 "★ The record’s yours · {score}": "★ El récord es tuyo · {score}",
 "Place": "Puesto",
-"Game": "Juego",
 "You?": "¿Tú?",
-"Island": "Isla",
-"Football": "Fútbol",
-"Sun Up": "Sol",
-"Chess": "Ajedrez"
+"Previous game": "Juego anterior",
+"Next game": "Siguiente juego"
 };
