@@ -149,7 +149,7 @@
     return TV('★ Beat {name}’s {score}', { name: top[0], poss: svPoss(top[0]), score });
   }
 
-  /* ---------- high scores: the top 10, and your name on it when you make it (hiscores.js) ---------- */
+  /* ---------- high scores: the top 5, and your name on it when you make it (hiscores.js) ---------- */
   let hsId = 0;
   function hiscoreBlock(def, score) {
     const box = document.createElement('div'); box.className = 'hs';
@@ -318,7 +318,7 @@
         setTimeout(() => {
           if (!cur || cur.api !== api) return;
           api.running = false;
-          // the high scores, with a place for your name if you made the top 10
+          // the high scores, with a place for your name if you made the top 5
           const score = o.score != null && o.counts !== false ? Math.round(o.score * 10) / 10 : null;
           const extra = HiScores.has(def.id) && o.score != null ? hiscoreBlock(def, score) : null;
           api.card({ kicker: o.kicker, title: o.title, text: o.text, score: line, extra, buttons: [{ label: o.again || 'Play again', on: () => api.begin() }, { label: 'Arcade', quiet: true, on: () => history.back() }] });
@@ -426,7 +426,7 @@
     api.card({ title: 'Paused', buttons: [{ label: 'Keep playing', on: () => { api.uncard(); api.paused = false; last = performance.now(); } }, { label: 'Arcade', quiet: true, on: () => history.back() }] });
   });
 
-  /* ---------- the hi scores: a game's top 10 in a pop-up, like the screen of an old arcade cabinet.
+  /* ---------- the hi scores: a game's top 5 in a pop-up, like the screen of an old arcade cabinet.
      The arrows (or left and right) go through the games; left alone, it moves on by itself every
      few seconds, the way the machines do between players. The first empty place says "YOU?", and
      Press start plays the game on the screen. ---------- */
@@ -442,7 +442,7 @@
     const body = pop.querySelector('.hs-rows');
     const cell = (cls, text) => { const td = document.createElement('td'); td.className = cls; td.textContent = text; return td; };
     body.innerHTML = '';
-    for (let i = 0; i < 10; i++) {                       // always ten places: the empty ones are room on the board
+    for (let i = 0; i < 5; i++) {                        // always five places: the empty ones are room on the board
       const tr = document.createElement('tr');
       if (b[i]) {
         tr.className = (i === 0 ? 'top' : i === 1 ? 'p2' : i === 2 ? 'p3' : '') + (me && String(b[i][0]).toLowerCase() === me ? ' me' : '');

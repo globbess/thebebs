@@ -1,4 +1,4 @@
-/* High scores, shared by everyone who plays: the top 10 of each scored game, with names. They live
+/* High scores, shared by everyone who plays: the top 5 of each scored game, with names. They live
    in the same Google Sheet as the RSVPs ("High scores" tab, rsvp-sheet.gs); delete a row there and
    it's gone. Only the real site sends scores. Anywhere else (this computer, a preview) there's a
    pretend board kept on the device, so nothing test-y ever reaches the sheet.
@@ -17,12 +17,12 @@
 
   const empty = () => { const o = {}; GAMES.forEach(g => { o[g] = []; }); return o; };
   const lowFirst = { list: true, chess: true };
-  // best first; each name once, with its best; the top 10
+  // best first; each name once, with its best; the top 5
   function sortAll(o) {
     GAMES.forEach(g => {
       (o[g] = o[g] || []).sort((a, b) => lowFirst[g] ? a[1] - b[1] : b[1] - a[1]);
       const seen = new Set();
-      o[g] = o[g].filter(([n]) => { const k = String(n).toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; }).slice(0, 10);
+      o[g] = o[g].filter(([n]) => { const k = String(n).toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; }).slice(0, 5);
     });
     return o;
   }
@@ -45,7 +45,7 @@
     if (!ready || GAMES.indexOf(game) < 0 || score == null || !isFinite(score)) return false;
     if (!lowFirst[game] && score <= 0) return false;                  // nobody gets on the board with a zero
     const b = (boards && boards[game]) || [];
-    if (b.length < 10) return true;
+    if (b.length < 5) return true;
     const worst = b[b.length - 1][1];
     return lowFirst[game] ? score < worst : score > worst;
   }
