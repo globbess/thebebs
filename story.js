@@ -60,7 +60,20 @@
   document.addEventListener('langchange', placeNudge);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(placeNudge);
 
+  // scrolled on past the story without tapping the button: a whisper, once, that there are more photos
   let touched = false;
+  const inner = story.closest('.inner');
+  if (inner && 'IntersectionObserver' in window) {
+    let seen = false;
+    const io = new IntersectionObserver(es => {
+      const e = es[0];
+      if (e.isIntersecting) { seen = true; return; }
+      if (!seen || touched || e.boundingClientRect.top > 0) return;     // only once it's gone off the top
+      io.disconnect();
+      if (window.whisper) window.whisper(window.t ? window.t('story.morePics', 'psst… more pics in the TL;DR ↑') : 'psst… more pics in the TL;DR ↑', true);
+    });
+    io.observe(inner);
+  }
   next.addEventListener('click', () => {
     if (!touched && nudge) nudge.classList.add('is-done');
     touched = true;

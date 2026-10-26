@@ -971,14 +971,12 @@ body.disco .dance{ opacity: 1; transform: none; }
   margin: -6px 0 0 2px;
   font-size: 13px; letter-spacing: .02em; white-space: nowrap;
   transform: rotate(-7deg);
-  text-shadow: 0 1px 10px rgba(var(--shade-rgb),.9);
+  text-shadow: 0 0 3px rgba(var(--shade-rgb),1), 0 0 6px rgba(var(--shade-rgb),.95), 0 1px 12px rgba(var(--shade-rgb),.9);   /* readable over the sun's dots */
 }
 /* not enough room on the right (narrow phones): the note sits on the left instead */
 .nudge.is-flipped{ left: auto; right: 58%; flex-direction: row-reverse; }
 .nudge.is-flipped svg{ transform: scaleX(-1); }
 .nudge.is-flipped .nudge-text{ margin: -6px 2px 0 0; transform: rotate(7deg); }
-.nudge-tap{ display: none; }
-@media (hover: none){ .nudge-click{ display: none; } .nudge-tap{ display: inline; } }
 .nudge path{ fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .nudge-line{ stroke-dasharray: 60; stroke-dashoffset: 60; }
 .nudge-head{ stroke-dasharray: 26; stroke-dashoffset: 26; }

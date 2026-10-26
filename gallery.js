@@ -87,7 +87,9 @@
     whisperT = setTimeout(() => w.classList.remove('is-on'), long ? 6500 : 3800);
   }
 
-  // the arcade button under the music: it glows for anyone who has found them all
+  window.whisper = whisper;   // the story uses it too (story.js)
+
+  // the games button on the opening screen: it glows for anyone who has found them all
   function lightArcade() { const a = document.getElementById('arcade-btn'); if (a) a.classList.add('is-lit'); }
   try { if (localStorage.getItem(DONE) === '1') lightArcade(); } catch (e) {}
 
